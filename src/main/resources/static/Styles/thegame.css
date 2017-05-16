@@ -1,0 +1,20 @@
+#divForGrid{
+width: 550px;
+}
+
+.mainrow {
+
+height: 50px;
+border: 1px solid black;
+display: flex;
+}
+
+.tiles {
+width: 50px;
+border: 1px solid red;
+}
+
+h1 {
+color: red;
+
+}
