@@ -17,6 +17,9 @@ public class Game {
 
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     Set<GamePlayer> GamePlayers;
+
+    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    Set<Score> scores;
     //END OF INSTANCE VARIABLES
 
 

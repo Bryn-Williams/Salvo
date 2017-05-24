@@ -1,10 +1,26 @@
 $(document).ready(function () {
 
-    var theLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-    var theNumbers = [" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+  var x = getURL();
+
+  $.getJSON("http://localhost:8080/api/game_view/" + x, function (bigData) {
+        //CALL THE FUNCTIONS HERE
+        var theData = bigData;
+
+        createTheGrid();
+        createSalvoGrid();
+
+        fillLeftGrid(x, theData);
+        getSalvoData(x, theData);
+
+  });
+});
+
+//END OF DOCUMENT READY END OF DOCUMENT READY END OF DOCUMENT READY END OF DOCUMENT READY END OF DOCUMENT READY
 
     function createTheGrid() {
 
+        var theLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+        var theNumbers = [" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
         var theDiv = $("#divForGrid"); //GETTING THE DIV
 
         for (var i = 0; i < 11; i++) {
@@ -34,9 +50,11 @@ $(document).ready(function () {
             theDiv.append(row);
         };
     };
-    createTheGrid();
 
     function createSalvoGrid() {
+
+        var theLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+        var theNumbers = [" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
         var theDiv = $("#divForSalvoes"); //GETTING THE DIV
 
@@ -69,16 +87,13 @@ $(document).ready(function () {
 
 
     };
-    createSalvoGrid();
-    //END OF GRID CREATION
 
-    //FUNCTIONS TO RETURN GAMEPLAYER DATA
     function getURL() {
 
         var theUrl = location.search;
+        var xx = paramObj(theUrl);
 
-        paramObj(theUrl);
-
+        return xx;
     };
 
     function paramObj(search) {
@@ -90,19 +105,27 @@ $(document).ready(function () {
         });
 
         obj = obj.gp;
-
-        //CALL THE GETJSON FUNCTION
-        getGPData(obj);
-        getSalvoData(obj);
-
+        return obj;
     }
 
     //GET LIST OF SHIP LOCATIONS
-    function getGPData(x) {
+    function fillLeftGrid(x, theData) {
 
-        $.getJSON("http://localhost:8080/api/game_view/" + x, function (gpData) {
-            var shipLocation = gpData["ships: "];
+            var salvoData = theData;
+            var shipLocation = salvoData.ships;
 
+            console.log(salvoData);
+
+             if (salvoData.salvoes["0"]["0"].gamePlayer == x) {
+
+                var chloesSalvos = salvoData.salvoes["1"];
+
+             }else {
+
+                var chloesSalvos = salvoData.salvoes["0"];
+             }
+
+            //GET JACK'S SHIPS
             for (var i = 0; i < shipLocation.length; i++) {
 
                 var arrayOfShipLocations = shipLocation[i].location;
@@ -110,97 +133,94 @@ $(document).ready(function () {
                 for (var j = 0; j < arrayOfShipLocations.length; j++) {
 
                     var individualLocation = arrayOfShipLocations[j];
-
-                    fillBackgroundColor(individualLocation);
+                    console.log(individualLocation);
+                    $("#" + individualLocation).addClass("blue");
                 };
             }
-            addGamePlayerInfo(x, gpData);
-        });
+            fillBackgroundColor(chloesSalvos);
+            addGamePlayerInfo(x, salvoData);
     };
 
     //GET LIST OF SALVO LOCATIONS
-    function getSalvoData(x) {
+    function getSalvoData(x, theData) {
 
-        $.getJSON("http://localhost:8080/api/game_view/" + x, function (salvoData) {
-            console.log(salvoData);
-            if (salvoData["salvoes: "]["0"]["0"].gamePlayer == x) {
+           var salvoData = theData;
 
-                var salvoLocations = salvoData["salvoes: "]["0"]["0"].locations;
-                var numberOfSalvoes = salvoData["salvoes: "]["0"].length;
+           //console.log(salvoData);
+            if (salvoData.salvoes["0"]["0"].gamePlayer == x) {
+
+                var salvoLocations = salvoData.salvoes["0"]["0"].locations;
+                var numberOfSalvoes = salvoData.salvoes["0"].length;
+
+                var chloesSalvos = salvoData.salvoes["1"];
+                //console.log(chloesSalvos);
 
                 for (var i = 0; i < numberOfSalvoes; i++) {
 
                     for (var j = 0; j < salvoLocations.length; j++) {
 
-                        var eachSalvo = salvoData["salvoes: "]["0"][i].locations[j];
-                        var eachTurn = salvoData["salvoes: "]["0"][i].turn;
+                        var eachSalvo = salvoData.salvoes["0"][i].locations[j];
+                        var eachTurn = salvoData.salvoes["0"][i].turn;
 
-                        fillBackgroundColorOfSalvoGrid(eachSalvo, eachTurn);
+                        fillBackgroundColorOfSalvoGrid(eachSalvo, eachTurn, chloesSalvos);
+                        //ADD CHLOES SALVOS TO FUNCTION ABOVE AND TEST EACH SALVO AGAINST HER ARRAYS!!!
                     }
                 }
             } else {
 
-                var salvoLocations = salvoData["salvoes: "][1]["0"].locations;
-                var numberOfSalvoes = salvoData["salvoes: "][1].length;
+                var salvoLocations = salvoData.salvoes[1]["0"].locations;
+                var numberOfSalvoes = salvoData.salvoes[1].length;
+                var chloesSalvos = salvoData.salvoes["0"];
+                //console.log(chloesSalvos);
 
                 for (var i = 0; i < numberOfSalvoes; i++) {
 
                     for (var j = 0; j < salvoLocations.length; j++) {
 
-                       var eachSalvo = salvoData["salvoes: "][1][i].locations[j];
-                       var eachTurn = salvoData["salvoes: "][1][i].turn;
+                       var eachSalvo = salvoData.salvoes[1][i].locations[j];
+                       var eachTurn = salvoData.salvoes[1][i].turn;
 
-                       //var oppositionSalvo = salvoData["salvoes: "]["0"][i].locations[j];
-                        //console.log(oppositionSalvo);
-                       fillBackgroundColorOfSalvoGrid(eachSalvo, eachTurn);
+                       //console.log(eachSalvo);
+                       fillBackgroundColorOfSalvoGrid(eachSalvo, eachTurn, chloesSalvos);
                     }
                 }
             }
-        })
     };
 
-
-
-
-
-    //ADD YOUR SALVOES
-    function fillBackgroundColorOfSalvoGrid(gridLocation, eachTurn) {
-
-
+    //ADD YOUR SALVOES TO RIGHT GRID
+    function fillBackgroundColorOfSalvoGrid(gridLocation, eachTurn, chloesSalvos) {
 
             $("#" + gridLocation + gridLocation).css("background-color", "green");
 
             //ADD TURN NUMBER TO SHOTS FIRED
             var turnNumber = eachTurn;
             $("#" + gridLocation + gridLocation).html(turnNumber);
-
      };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     //ADD THE SHIPS
-    function fillBackgroundColor(loc) {
+    function fillBackgroundColor(chloesSalvos) {
 
-        $("#" + loc).css("background-color", "blue");
+               for(var i = 0; i < chloesSalvos.length;i++){
 
+                    for(var x = 0; x < chloesSalvos[i].locations.length; x++){
+
+                        var chloeEachSalvo = chloesSalvos[i].locations[x];
+
+                            if($("#" + chloeEachSalvo).hasClass("blue")){
+
+                             $("#" + chloeEachSalvo).addClass("red");
+                             $('#' + chloeEachSalvo).text("u got hit");
+                             }else{
+                             $("#" + chloeEachSalvo).addClass("green");
+                            }
+                    }
+               }
     };
-
     //FUNCTION TO ADD THE GAMEPLAYER INFO
     function addGamePlayerInfo(x, gpData) {
 
         var gameInfoDiv = $("#whoIsPlayingNViewing");
-        var gpData = gpData["gamePlayers: "];
+        var gpData = gpData.gamePlayers;
 
         var playerBoxOne = $("<h3 class='playerBox'></h3>");
         var playerBoxTwo = $("<h3 class='playerBox'></h3>");
@@ -211,9 +231,6 @@ $(document).ready(function () {
         playerBoxOne.append(playerNameOne);
         playerBoxTwo.append(playerNameTwo);
 
-        /* console.log(x);
-         console.log(gpData);*/
-
         if (gpData[x - 1].gamePlayer_id % 2 != 0) {
 
             playerBoxOne.append("(YOU)");
@@ -223,12 +240,14 @@ $(document).ready(function () {
 
             playerBoxTwo.append("(YOU)");
         }
-
         gameInfoDiv.append(playerBoxOne);
         gameInfoDiv.append(playerBoxTwo);
-
     };
 
-    getURL();
 
-});
+
+
+
+
+
+

@@ -2,19 +2,48 @@
 width: 550px;
 }
 
+#bothGrids {
+    display: flex;
+    justify-content: space-around;
+}
+
+#shipSalvoLabel {
+    display: flex;
+    justify-content: space-around;
+}
+
 .mainrow {
 
-height: 50px;
-border: 1px solid black;
-display: flex;
+    height: 50px;
+    /*border: 1px solid black;*/
+    display: flex;
 }
 
 .tiles {
-width: 50px;
-border: 1px solid red;
+    width: 50px;
+    border: 1px solid red;
 }
 
 h1 {
-color: red;
+    color: red;
+}
 
+.numbertiles, .lettertiles {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+}
+
+.blue {
+    background-color: blue;
+}
+
+.red {
+    background-color: red;
+}
+
+.green {
+    background-color: green;
 }

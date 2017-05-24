@@ -18,7 +18,7 @@ public class SalvoApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository) {
+	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
 		return (args) -> {
 
 			//CREATE PLAYERS
@@ -46,8 +46,6 @@ public class SalvoApplication {
 			GamePlayer gp2 = new GamePlayer(gameOne, pTwo);
 			GamePlayer gp3 = new GamePlayer(gameTwo, pThree);
 
-
-
 			//CREATE SHIP
 			Ship ship1 = new Ship("Carrier", new ArrayList<>(Arrays.asList("A1", "A2", "A3", "A4", "A5")));
 			Ship ship2 = new Ship("Battleship", new ArrayList<>(Arrays.asList("B1", "B2", "B3", "B4")));
@@ -56,12 +54,32 @@ public class SalvoApplication {
 			Ship ship5 = new Ship("Patrol Boat", new ArrayList<>(Arrays.asList("E1", "E2")));
 
 			//ADD SHIPS TO GAME
-
 			gp1.addShip(ship1);
 			gp1.addShip(ship2);
 			gp1.addShip(ship3);
 
 			gp2.addShip(ship4);
+
+			//CREATE SALVOES
+			Salvo salvoOne = new Salvo(1, new ArrayList<>(Arrays.asList("H9", "I9", "J9")));
+			Salvo salvoOneTwo = new Salvo(2, new ArrayList<>(Arrays.asList("H8", "I8", "J8")));
+			Salvo salvoTwo = new Salvo(1, new ArrayList<>(Arrays.asList("F9", "G9", "H9")));
+			Salvo salvoTwoTwo = new Salvo(2,new ArrayList<>(Arrays.asList("A5", "B5", "C5")));
+
+			//ADD SALVO TO GAME
+			gp1.addSalvo(salvoOne);
+			gp1.addSalvo(salvoOneTwo);
+			gp2.addSalvo(salvoTwo);
+			gp2.addSalvo(salvoTwoTwo);
+
+			//NEW SCORES
+
+			Score scoreOne = new Score(gameOne, pOne, 1);
+			Score scoreTwo = new Score(gameTwo, pThree, 2) ;
+
+			//SAVE SCORE
+			scoreRepository.save(scoreOne);
+			scoreRepository.save(scoreTwo);
 
 			//SAVE GAMEPLAYER
 			gamePlayerRepository.save(gp1);
@@ -75,6 +93,11 @@ public class SalvoApplication {
 			shipRepository.save(ship4);
 			shipRepository.save(ship5);
 
+			//SAVE SALVO
+			salvoRepository.save(salvoOne);
+			salvoRepository.save(salvoTwo);
+			salvoRepository.save(salvoOneTwo);
+			salvoRepository.save(salvoTwoTwo);
 
 		};
 	}

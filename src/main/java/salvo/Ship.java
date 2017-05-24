@@ -26,15 +26,14 @@ public class Ship {
     public long getShipId() {
         return ShipId;
     }
-
     public void setShipId(long shipId) {
         ShipId = shipId;
     }
 
+
     public String getShipType() {
         return shipType;
     }
-
     public void setShipType(String shipType) {
         this.shipType = shipType;
     }
@@ -42,7 +41,6 @@ public class Ship {
     public GamePlayer getGamePlayers() {
         return gamePlayers;
     }
-
     public void setGamePlayers(GamePlayer gamePlayers) {
         this.gamePlayers = gamePlayers;
     }
@@ -50,13 +48,11 @@ public class Ship {
     public List<String> getShipLocation() {
         return shipLocation;
     }
-
     public void setShipLocation(List<String> shipLocation) {
         this.shipLocation = shipLocation;
     }
 
-
-    //METHOD TO CREATE INSTANCES AKA CONSTRUCTORS!!
+    //METHOD TO CREATE INSTANCES AKA CONSTRUCTOR METHOD!!
 
     public Ship(){}
 
@@ -65,7 +61,4 @@ public class Ship {
         this.shipType = shipType;
         this.shipLocation = shipLocation;
     }
-
-
-
 }

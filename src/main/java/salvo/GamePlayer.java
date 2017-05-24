@@ -19,20 +19,33 @@ public class GamePlayer {
     private Game game;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="score_id")
+    private Score score;
+
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="player_id")
     private Player player;
 
-
     @OneToMany(mappedBy = "gamePlayers", fetch = FetchType.EAGER)
     private Set<Ship> myships = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "gamePlayers", fetch = FetchType.EAGER)
+    private Set<Salvo> mysalvoes = new LinkedHashSet<>();
+
     //END OF INSTANCE VARIABLES
 
-
+    //START OF METHOD CONSTRUCTOR
     public GamePlayer() {};
 
     public GamePlayer(Game game, Player player) {
         this.game = game;
         this.player = player;
+    }
+    //END OF METHOD CONSTRUCTOR
+
+    public Game getGame() {
+        return game;
     }
 
     public Player getPlayer() {
@@ -43,38 +56,53 @@ public class GamePlayer {
         return myships;
     }
 
-    public void setMyships(Set<Ship> myships) {
-        this.myships = myships;
+    public void setMysalvoes(Set<Salvo> mysalvoes) {
+        this.mysalvoes = mysalvoes;
     }
 
-    public Game getGame() {
-        return game;
+    public Set<Salvo> getMysalvoes() {
+        return mysalvoes;
     }
 
+    public Score getScore() {
+        return score;
+    }
+
+    public void setScore(Score score) {
+        this.score = score;
+    }
+
+
+
+    //ADD SHIP(S) TO EMPTY INSTANCE VARIABLE ABOVE
     public void addShip(Ship ship){
 
         ship.setGamePlayers(this);
         myships.add(ship);
-
     }
+    //ADD SALVO(ES) TO EMPTY INSTANCE VARIABLE ABOVE
+    public void addSalvo(Salvo salvo){
+
+        salvo.setGamePlayers(this);
+        mysalvoes.add(salvo);
+
+    };
 
 
 
-    // ID METHOD
+    // ID GETTER AND SETTER
     public long getId() {
         return Id;
     }
     public void setId(long id) {
         Id = id;
     }
-    //DATE METHOD
+    //DATE GETTER AND SETTER
     public Date getDate() {
         return date;
     }
     public void setDate(Date date) {
         this.date = date;
     }
-
-
 
 }
