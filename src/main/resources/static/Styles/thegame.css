@@ -1,6 +1,15 @@
 #divForGrid{
-width: 550px;
+    width: 550px;
 }
+
+body{
+
+    background-image: url("../Styles/wallpaper1.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+
+}
+
 
 #bothGrids {
     display: flex;
@@ -10,6 +19,12 @@ width: 550px;
 #shipSalvoLabel {
     display: flex;
     justify-content: space-around;
+}
+
+.center{
+    display: flex;
+    justify-content: space-around;
+
 }
 
 .mainrow {
@@ -25,7 +40,8 @@ width: 550px;
 }
 
 h1 {
-    color: red;
+    color: black;
+    font-family: "Bookman Old Style";
 }
 
 .numbertiles, .lettertiles {

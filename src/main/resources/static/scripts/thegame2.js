@@ -13,6 +13,13 @@ $(document).ready(function () {
         getSalvoData(x, theData);
 
   });
+
+  $.getJSON("http://localhost:8080/api/games", function(scoreboardData){
+
+        createScoreBoard(scoreboardData);
+
+  });
+
 });
 
 //END OF DOCUMENT READY END OF DOCUMENT READY END OF DOCUMENT READY END OF DOCUMENT READY END OF DOCUMENT READY
@@ -22,6 +29,8 @@ $(document).ready(function () {
         var theLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
         var theNumbers = [" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
         var theDiv = $("#divForGrid"); //GETTING THE DIV
+
+        theDiv.append("<h2>Your Crew!</h2>");
 
         for (var i = 0; i < 11; i++) {
 
@@ -57,6 +66,8 @@ $(document).ready(function () {
         var theNumbers = [" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
         var theDiv = $("#divForSalvoes"); //GETTING THE DIV
+        theDiv.append("<h2>Your Shots!</h2>");
+
 
         for (var i = 0; i < 11; i++) {
 
@@ -243,6 +254,51 @@ $(document).ready(function () {
         gameInfoDiv.append(playerBoxOne);
         gameInfoDiv.append(playerBoxTwo);
     };
+
+
+    //CREATE SCORE BOARD
+
+    function createScoreBoard(data){
+
+        var theData = data.listOfPlayers;
+
+        var theMainTable = $("<table/>");
+        var tableHead = $("<tr><th>Name</th><th>Total Score</th><th>Won</th><th>Lost</th><th>Tied</th></tr>");
+
+        theMainTable.append(tableHead);
+
+        for(var i = 0; i < theData.length; i++){
+
+            var tableRow = $("<tr/>");
+
+            var a = theData[i].NameOfPlayer;
+            tableRow.append("<td>" + a + "</td>");
+
+            var b = theData[i].Totalscore;
+            tableRow.append("<td>" + b + "</td>");
+
+            var c = theData[i].Wins;
+            tableRow.append("<td>" + c + "</td>");
+
+            var d = theData[i].Losses;
+            tableRow.append("<td>" + d + "</td>");
+
+            var e = theData[i].Ties;
+            tableRow.append("<td>" + e + "</td>");
+
+            theMainTable.append(tableRow);
+        }
+
+        if(window.location.href == "http://localhost:8080/thegame.html"){
+
+        $("#scoreBoard").append(theMainTable);
+
+        }
+
+
+        console.log(theData);
+
+    }
 
 
 

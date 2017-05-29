@@ -19,9 +19,6 @@ public class Score {
     @JoinColumn(name="game_id")
     private Game game;
 
-    @OneToMany(mappedBy = "score")
-    private Set<GamePlayer> gameplayer;
-
     private double thescore;
 
     //END OF FIELDS or INSTANCE VARS
@@ -29,10 +26,10 @@ public class Score {
 
     public Score(){}
 
-    public Score(Game gameid, Player playerid, double thescore ){
+    public Score(GamePlayer gameplayer, double thescore ){
 
-        this.game = gameid;
-        this.player = playerid;
+        this.game = gameplayer.getGame();
+        this.player = gameplayer.getPlayer();
         this.thescore = thescore;
 
     }
@@ -60,14 +57,6 @@ public class Score {
 
     public void setGame(Game game) {
         this.game = game;
-    }
-
-    public Set<GamePlayer> getGameplayer() {
-        return gameplayer;
-    }
-
-    public void setGameplayer(Set<GamePlayer> gameplayer) {
-        this.gameplayer = gameplayer;
     }
 
     public double getThescore() {

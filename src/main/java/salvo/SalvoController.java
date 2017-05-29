@@ -16,6 +16,7 @@ public class SalvoController {
     private GameRepository gameRepo;
     @Autowired
     private GamePlayerRepository gamePlayerRepo;
+    @Autowired PlayerRepository playerRepo;
 
 
     @RequestMapping("/games")
@@ -27,8 +28,37 @@ public class SalvoController {
                 .map(eachGame -> getGameInfo(eachGame))
                 .collect(Collectors.toList()));
 
+        dto.put("listOfPlayers", playerRepo.findAll().stream().map(eachPlayer -> getPlayer(eachPlayer)).collect(Collectors.toList()));
+
         return dto;
     }
+
+    private Map<String, Object> getPlayer(Player player) {
+
+        Map<String, Object> playerInfo = new LinkedHashMap<>();
+
+        playerInfo.put("NameOfPlayer", player.getUserName());
+        playerInfo.put("Totalscore", player.getTotalScore());
+        playerInfo.put("Wins", player.getNumberOfWins());
+        playerInfo.put("Losses", player.getNumberOfLosses());
+        playerInfo.put("Ties", player.getNumberOfTies());
+
+        return playerInfo;
+    };
+
+    /*private double getTotalScore(Player player){
+
+        List<Double> allscores = new ArrayList<>();
+        double totalScore;
+
+        allscores.add(player.getScores());
+
+        //ADD VALUES OF LIST TOGETHER TO CONVERT LIST TO DOUBLE
+
+        return totalScore;
+    }*/
+
+
 
     private Map<String, Object> getGameInfo(Game game) {
 
@@ -43,7 +73,6 @@ public class SalvoController {
         return gameInfo;
     }
 
-
     //METHOD TO RETURN GAMEPLAYER ID AND PLAYER
     private Map<String, Object> returnIDnP(GamePlayer gameplayer) {
 
@@ -51,11 +80,15 @@ public class SalvoController {
 
         dto2.put("id", gameplayer.getId());
         dto2.put("player", returnIdnEmail(gameplayer.getPlayer()));
-        dto2.put("score", gameplayer.getScore());
+        if(gameplayer.getScore() != null) {
+            dto2.put("score", gameplayer.getScore().getThescore());
+        }else{
+
+            dto2.put("score", null);
+        }
 
         return dto2;
     }
-
 
     //METHOD TO RETURN ID AND EMAIL
     private Map<String, Object> returnIdnEmail(Player player){
@@ -115,7 +148,6 @@ public class SalvoController {
     }
 
     //RETURN SALVOES
-
     private List<Map<String, Object>> getSalvoes(GamePlayer gamePlayer) {
 
         Set<Salvo> salvoes = gamePlayer.getMysalvoes();

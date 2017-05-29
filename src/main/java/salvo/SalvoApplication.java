@@ -74,8 +74,8 @@ public class SalvoApplication {
 
 			//NEW SCORES
 
-			Score scoreOne = new Score(gameOne, pOne, 1);
-			Score scoreTwo = new Score(gameTwo, pThree, 2) ;
+			Score scoreOne = new Score(gp1, 1);
+			Score scoreTwo = new Score(gp2, 0.5) ;
 
 			//SAVE SCORE
 			scoreRepository.save(scoreOne);

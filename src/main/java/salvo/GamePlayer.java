@@ -19,11 +19,6 @@ public class GamePlayer {
     private Game game;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="score_id")
-    private Score score;
-
-
-    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="player_id")
     private Player player;
 
@@ -64,15 +59,6 @@ public class GamePlayer {
         return mysalvoes;
     }
 
-    public Score getScore() {
-        return score;
-    }
-
-    public void setScore(Score score) {
-        this.score = score;
-    }
-
-
 
     //ADD SHIP(S) TO EMPTY INSTANCE VARIABLE ABOVE
     public void addShip(Ship ship){
@@ -87,6 +73,11 @@ public class GamePlayer {
         mysalvoes.add(salvo);
 
     };
+
+    public Score getScore(){
+
+        return player.getScores(this.game);
+    }
 
 
 

@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
-
 @Entity
 public class Game {
 
@@ -42,5 +41,14 @@ public class Game {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    public Set<Score> getScores() {
+        return scores;
+    }
+
+    public void setScores(Set<Score> scores) {
+        this.scores = scores;
+    }
+
 }
 
