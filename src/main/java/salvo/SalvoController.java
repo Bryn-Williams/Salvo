@@ -1,9 +1,10 @@
 package salvo;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,21 +17,47 @@ public class SalvoController {
     private GameRepository gameRepo;
     @Autowired
     private GamePlayerRepository gamePlayerRepo;
-    @Autowired PlayerRepository playerRepo;
+    @Autowired
+    private PlayerRepository playerRepo;
 
 
-    @RequestMapping("/games")
-    public Map<String,Object> getIds() {
+   @RequestMapping("/games")
+    public Map<String,Object> getIds(Authentication authentication) {
 
         Map<String, Object> dto = new LinkedHashMap<>();
 
-        dto.put("Games", gameRepo.findAll().stream()
+        dto.put("currentPlayer", getInfoOfLoggedOnPlayer(authentication));
+
+        dto.put("games", gameRepo.findAll().stream()
                 .map(eachGame -> getGameInfo(eachGame))
                 .collect(Collectors.toList()));
 
-        dto.put("listOfPlayers", playerRepo.findAll().stream().map(eachPlayer -> getPlayer(eachPlayer)).collect(Collectors.toList()));
+        dto.put("listOfPlayers", playerRepo.findAll().stream()
+               .map(eachPlayer -> getPlayer(eachPlayer))
+               .collect(Collectors.toList()));
 
-        return dto;
+       return dto;
+    }
+
+    Map<String, Object> getInfoOfLoggedOnPlayer(Authentication authentication){
+
+        if(authentication != null){
+
+            Map<String, Object> dtoxx = new LinkedHashMap<>();
+
+
+            List<Player> thisPlayerId = playerRepo.findByUserName(authentication.getName());
+
+            Player theMoFRO = thisPlayerId.get(0);
+
+            dtoxx.put("id", theMoFRO.getId());
+            dtoxx.put("name", theMoFRO.getUserName());
+
+            return dtoxx;
+
+        }else {
+            return null;
+        }
     }
 
     private Map<String, Object> getPlayer(Player player) {
@@ -45,20 +72,6 @@ public class SalvoController {
 
         return playerInfo;
     };
-
-    /*private double getTotalScore(Player player){
-
-        List<Double> allscores = new ArrayList<>();
-        double totalScore;
-
-        allscores.add(player.getScores());
-
-        //ADD VALUES OF LIST TOGETHER TO CONVERT LIST TO DOUBLE
-
-        return totalScore;
-    }*/
-
-
 
     private Map<String, Object> getGameInfo(Game game) {
 
@@ -100,6 +113,7 @@ public class SalvoController {
 
         return dto3;
     }
+
 
     //METHOD TO RETURN JSON WITH GAMEPLAYER INFO
     @RequestMapping("/game_view/{nn}")
@@ -167,4 +181,22 @@ public class SalvoController {
 
     }
 
+    //METHODS TO CREATE NEW PLAYERS
+
+    @RequestMapping(path = "/players", method = RequestMethod.POST)
+    public ResponseEntity<String> createUser(@RequestParam String name, @RequestParam String pwd) {
+
+        List<Player> player = playerRepo.findByUserName(name);
+
+        if (name.isEmpty()) {
+            return new ResponseEntity<>("No name given", HttpStatus.FORBIDDEN);
+        }
+
+        if (!player.isEmpty()) {
+            return new ResponseEntity<>("Name already used", HttpStatus.CONFLICT);
+        }
+
+        playerRepo.save(new Player(name, pwd));
+        return new ResponseEntity<>("Named added", HttpStatus.CREATED);
+    }
 }

@@ -20,10 +20,19 @@ public class Player {
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
     Set<Score> scores;
 
+    private String password;
+
+    //END OF FIELDS
+
     public Player() {}
 
-    public Player(String userName) { this.userName = userName; }
+    public Player(String userName, String password) {
 
+        this.userName = userName;
+        this.password = password;
+    }
+
+    //START OF GETTERS AND SETTERS
     public long getId() {
         return Id;
     }
@@ -54,6 +63,14 @@ public class Player {
 
     public void setScores(Set<Score> scores) {
         this.scores = scores;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String toString() {
