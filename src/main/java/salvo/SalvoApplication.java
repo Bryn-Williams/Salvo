@@ -1,6 +1,5 @@
 package salvo;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -41,9 +40,9 @@ public class SalvoApplication {
 		return (args) -> {
 
 			//CREATE PLAYERS
-			Player pOne = new Player("Jack Bauer", "24");
-			Player pTwo = new Player("Chloe O'Brian", "42");
-			Player pThree = new Player("Kim Bauer", "kb");
+			Player pOne = new Player("JackBauer", "24");
+			Player pTwo = new Player("Chloe", "42");
+			Player pThree = new Player("KimBauer", "kb");
 
 			// SAVE PLAYERS
 			playerRepository.save(pOne);
@@ -64,6 +63,7 @@ public class SalvoApplication {
 			GamePlayer gp1 = new GamePlayer(gameOne, pOne);
 			GamePlayer gp2 = new GamePlayer(gameOne, pTwo);
 			GamePlayer gp3 = new GamePlayer(gameTwo, pThree);
+			GamePlayer gp4 = new GamePlayer(gameThree, pOne);
 
 			//CREATE SHIP
 			Ship ship1 = new Ship("Carrier", new ArrayList<>(Arrays.asList("A1", "A2", "A3", "A4", "A5")));
@@ -76,7 +76,6 @@ public class SalvoApplication {
 			gp1.addShip(ship1);
 			gp1.addShip(ship2);
 			gp1.addShip(ship3);
-
 			gp2.addShip(ship4);
 
 			//CREATE SALVOES
@@ -104,6 +103,7 @@ public class SalvoApplication {
 			gamePlayerRepository.save(gp1);
 			gamePlayerRepository.save(gp2);
 			gamePlayerRepository.save(gp3);
+			gamePlayerRepository.save(gp4);
 
 			//SAVE SHIP TO REPOSITORY
 			shipRepository.save(ship1);

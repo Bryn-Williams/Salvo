@@ -1,36 +1,149 @@
-#divForGrid{
-    width: 550px;
+*{
+
+font-family: Lucida Console;
+-webkit-box-sizing: border-box;
+        box-sizing: border-box;
+
 }
 
-body{
+html {
 
     background-image: url("../Styles/wallpaper1.jpg");
     background-repeat: no-repeat;
     background-size: cover;
-
+    margin: 0px;
+    min-height: 100%;
 }
+
+
+h1, h2 {
+    color: black;
+    font-family: "Bookman Old Style";
+}
+
+h1 {
+font-size: 50px;
+margin-bottom: 0px;
+}
+
+table {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    width: 450px;
+}
+
+#divForGrid{
+    width: 550px;
+}
+
+th, td {
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+    background-color: rgba(43, 172, 227, 0.67);
+}
+
 
 
 #bothGrids {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: space-around;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+}
+
+tr{
+    height: 40px;
+}
+
+td {
+    text-align: center;
+}
+
+th {
+    min-width: 65px;
+}
+
+form {
+    padding: 20px;
+    width: 450px;
+
 }
 
 #shipSalvoLabel {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: space-around;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
 }
 
-.center{
-    display: flex;
-    justify-content: space-around;
+#footerBar {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.83);
+    position:fixed;
 
+    bottom:0;
+    text-align: center;
+    height: 50px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+}
+
+#logOutBut {
+
+    background-color: rgba(43, 172, 227, 0.67);
+    height: 40px;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+#scoreBoard {
+    background-color: rgba(255, 255, 255, 0.73);
+    border-radius: 10px;
+}
+
+#theLoginSpace {
+    background-color: rgba(255, 255, 255, 0.73);
+    border: 1px solid black;
+
+    border-radius: 10px;
+}
+
+#mainBody{
+margin-bottom: 20px;
+}
+
+body {
+    margin-bottom:100px;
+}
+
+
+.center{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
 }
 
 .mainrow {
 
     height: 50px;
-    /*border: 1px solid black;*/
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
 }
 
@@ -39,16 +152,35 @@ body{
     border: 1px solid red;
 }
 
-h1 {
-    color: black;
-    font-family: "Bookman Old Style";
+.centerColumn {
+
+    display:-webkit-box;
+
+    display:-ms-flexbox;
+
+    display:flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
 }
 
 .numbertiles, .lettertiles {
 
+    display: -webkit-box;
+
+    display: -ms-flexbox;
+
     display: flex;
-    justify-content: center;
-    align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
     width: 50px;
 }
 
@@ -62,4 +194,34 @@ h1 {
 
 .green {
     background-color: green;
+}
+
+.labels {
+    min-width: 110px;
+    display: inline-block;
+    margin-top:20px;
+}
+
+.logSignInBut {
+    min-width: 100px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    background-color: rgba(43, 172, 227, 0.67);
+    height: 40px;
+}
+
+@-webkit-keyframes slide {
+    from{
+        background-position:1px;
+    }
+    to{
+        background-position:575px;
+    }
+}
+
+#footerBar{
+    width:100%;
+        background:url(https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Graney_class_SSN.svg/500px-Graney_class_SSN.svg.png);
+
+    -webkit-animation: slide 10s linear infinite;
 }

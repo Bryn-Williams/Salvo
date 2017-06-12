@@ -1,269 +1,41 @@
 $(document).ready(function () {
 
-  var x = getURL();
-
-  $.getJSON("http://localhost:8080/api/game_view/" + x, function (bigData) {
-        //CALL THE FUNCTIONS HERE
-        var theData = bigData;
-
-        createTheGrid();
-        createSalvoGrid();
-
-        fillLeftGrid(x, theData);
-        getSalvoData(x, theData);
-
-  });
-
   $.getJSON("http://localhost:8080/api/games", function(scoreboardData){
 
         createScoreBoard(scoreboardData);
 
-  });
+        createListOfGames(scoreboardData);
 
+        checkIfLogIn();
+
+  });
 });
 
 //END OF DOCUMENT READY END OF DOCUMENT READY END OF DOCUMENT READY END OF DOCUMENT READY END OF DOCUMENT READY
 
-    function createTheGrid() {
+    function checkIfLogIn(){
 
-        var theLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-        var theNumbers = [" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-        var theDiv = $("#divForGrid"); //GETTING THE DIV
+        $.get("api/games", function(data){
 
-        theDiv.append("<h2>Your Crew!</h2>");
+            if(data.currentPlayer != null){
 
-        for (var i = 0; i < 11; i++) {
+                $("#rightBox").hide();
+                var userNameValue = data.currentPlayer.name;
+                console.log(userNameValue);
 
-            var row = $("<div class='mainrow'></div>");
-            var tiles = $("<div class='numbertiles'></div>");
-            var spanny = $("<span></span>");
-
-            spanny.append(theNumbers[i]);
-            tiles.append(spanny);
-            row.append(tiles);
-
-            for (var x = 0; x < 10; x++) {
-
-                var tiles = $("<div class='tiles'></div>");
-                var lettertiles = $("<div class='lettertiles'></div>");
-
-                if (i == 0) {
-                    lettertiles.append(theLetters[x]);
-                    row.append(lettertiles);
-                } else {
-
-                    tiles.attr("id", theLetters[x] + i);
-                    row.append(tiles)
-                }
+                $("#theLoggedInUserSpace").html(userNameValue + " is logged in");
             }
-            theDiv.append(row);
-        };
-    };
+         })
 
-    function createSalvoGrid() {
-
-        var theLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-        var theNumbers = [" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-
-        var theDiv = $("#divForSalvoes"); //GETTING THE DIV
-        theDiv.append("<h2>Your Shots!</h2>");
-
-
-        for (var i = 0; i < 11; i++) {
-
-            var row = $("<div class='mainrow'></div>");
-            var tiles = $("<div class='numbertiles'></div>");
-            var spanny = $("<span></span>");
-
-            spanny.append(theNumbers[i]);
-            tiles.append(spanny);
-            row.append(tiles);
-
-            for (var x = 0; x < 10; x++) {
-
-                var tiles = $("<div class='tiles'></div>");
-                var lettertiles = $("<div class='lettertiles'></div>");
-
-                if (i == 0) {
-                    lettertiles.append(theLetters[x]);
-                    row.append(lettertiles);
-                } else {
-
-                    tiles.attr("id", theLetters[x] + i + theLetters[x] + i);
-                    row.append(tiles)
-                }
-            }
-            theDiv.append(row);
-        };
-
-
-    };
-
-    function getURL() {
-
-        var theUrl = location.search;
-        var xx = paramObj(theUrl);
-
-        return xx;
-    };
-
-    function paramObj(search) {
-        var obj = {};
-        var reg = /(?:[?&]([^?&#=]+)(?:=([^&#]*))?)(?:#.*)?/g;
-
-        search.replace(reg, function (match, param, val) {
-            obj[decodeURIComponent(param)] = val === undefined ? "" : decodeURIComponent(val);
-        });
-
-        obj = obj.gp;
-        return obj;
     }
 
-    //GET LIST OF SHIP LOCATIONS
-    function fillLeftGrid(x, theData) {
-
-            var salvoData = theData;
-            var shipLocation = salvoData.ships;
-
-            console.log(salvoData);
-
-             if (salvoData.salvoes["0"]["0"].gamePlayer == x) {
-
-                var chloesSalvos = salvoData.salvoes["1"];
-
-             }else {
-
-                var chloesSalvos = salvoData.salvoes["0"];
-             }
-
-            //GET JACK'S SHIPS
-            for (var i = 0; i < shipLocation.length; i++) {
-
-                var arrayOfShipLocations = shipLocation[i].location;
-
-                for (var j = 0; j < arrayOfShipLocations.length; j++) {
-
-                    var individualLocation = arrayOfShipLocations[j];
-                    console.log(individualLocation);
-                    $("#" + individualLocation).addClass("blue");
-                };
-            }
-            fillBackgroundColor(chloesSalvos);
-            addGamePlayerInfo(x, salvoData);
-    };
-
-    //GET LIST OF SALVO LOCATIONS
-    function getSalvoData(x, theData) {
-
-           var salvoData = theData;
-
-           //console.log(salvoData);
-            if (salvoData.salvoes["0"]["0"].gamePlayer == x) {
-
-                var salvoLocations = salvoData.salvoes["0"]["0"].locations;
-                var numberOfSalvoes = salvoData.salvoes["0"].length;
-
-                var chloesSalvos = salvoData.salvoes["1"];
-                //console.log(chloesSalvos);
-
-                for (var i = 0; i < numberOfSalvoes; i++) {
-
-                    for (var j = 0; j < salvoLocations.length; j++) {
-
-                        var eachSalvo = salvoData.salvoes["0"][i].locations[j];
-                        var eachTurn = salvoData.salvoes["0"][i].turn;
-
-                        fillBackgroundColorOfSalvoGrid(eachSalvo, eachTurn, chloesSalvos);
-                        //ADD CHLOES SALVOS TO FUNCTION ABOVE AND TEST EACH SALVO AGAINST HER ARRAYS!!!
-                    }
-                }
-            } else {
-
-                var salvoLocations = salvoData.salvoes[1]["0"].locations;
-                var numberOfSalvoes = salvoData.salvoes[1].length;
-                var chloesSalvos = salvoData.salvoes["0"];
-                //console.log(chloesSalvos);
-
-                for (var i = 0; i < numberOfSalvoes; i++) {
-
-                    for (var j = 0; j < salvoLocations.length; j++) {
-
-                       var eachSalvo = salvoData.salvoes[1][i].locations[j];
-                       var eachTurn = salvoData.salvoes[1][i].turn;
-
-                       //console.log(eachSalvo);
-                       fillBackgroundColorOfSalvoGrid(eachSalvo, eachTurn, chloesSalvos);
-                    }
-                }
-            }
-    };
-
-    //ADD YOUR SALVOES TO RIGHT GRID
-    function fillBackgroundColorOfSalvoGrid(gridLocation, eachTurn, chloesSalvos) {
-
-            $("#" + gridLocation + gridLocation).css("background-color", "green");
-
-            //ADD TURN NUMBER TO SHOTS FIRED
-            var turnNumber = eachTurn;
-            $("#" + gridLocation + gridLocation).html(turnNumber);
-     };
-
-    //ADD THE SHIPS
-    function fillBackgroundColor(chloesSalvos) {
-
-               for(var i = 0; i < chloesSalvos.length;i++){
-
-                    for(var x = 0; x < chloesSalvos[i].locations.length; x++){
-
-                        var chloeEachSalvo = chloesSalvos[i].locations[x];
-
-                            if($("#" + chloeEachSalvo).hasClass("blue")){
-
-                             $("#" + chloeEachSalvo).addClass("red");
-                             $('#' + chloeEachSalvo).text("u got hit");
-                             }else{
-                             $("#" + chloeEachSalvo).addClass("green");
-                            }
-                    }
-               }
-    };
-    //FUNCTION TO ADD THE GAMEPLAYER INFO
-    function addGamePlayerInfo(x, gpData) {
-
-        var gameInfoDiv = $("#whoIsPlayingNViewing");
-        var gpData = gpData.gamePlayers;
-
-        var playerBoxOne = $("<h3 class='playerBox'></h3>");
-        var playerBoxTwo = $("<h3 class='playerBox'></h3>");
-
-        var playerNameOne = gpData[0].player.userName;
-        var playerNameTwo = gpData[1].player.userName;
-
-        playerBoxOne.append(playerNameOne);
-        playerBoxTwo.append(playerNameTwo);
-
-        if (gpData[x - 1].gamePlayer_id % 2 != 0) {
-
-            playerBoxOne.append("(YOU)");
-        }
-
-        if (gpData[x - 1].gamePlayer_id % 2 == 0) {
-
-            playerBoxTwo.append("(YOU)");
-        }
-        gameInfoDiv.append(playerBoxOne);
-        gameInfoDiv.append(playerBoxTwo);
-    };
-
-
     //CREATE SCORE BOARD
-
     function createScoreBoard(data){
 
         var theData = data.listOfPlayers;
 
         var theMainTable = $("<table/>");
-        var tableHead = $("<tr><th>Name</th><th>Total Score</th><th>Won</th><th>Lost</th><th>Tied</th></tr>");
+        var tableHead = $("<tr id=\"topRow\"><th>Name</th><th>Total Score</th><th>Won</th><th>Lost</th><th>Tied</th></tr>");
 
         theMainTable.append(tableHead);
 
@@ -294,15 +66,174 @@ $(document).ready(function () {
         $("#scoreBoard").append(theMainTable);
 
         }
-
-
-        console.log(theData);
-
     }
 
+    //GET DATA FROM FORM
+    function logInFunction(){
 
+       var userNameValue = $("#userId").val();
+       var passwordValue = $("#passwordId").val();
 
+       passwordValue = passwordValue.toString();
 
+        //Create object to send
+        var userAndPasswordObject = { name: userNameValue , pwd: passwordValue};
+
+        //console.log(userAndPasswordObject);
+
+        $.post("/api/login", userAndPasswordObject, function(){
+
+            alert("Log in successful!")
+
+            $("#theLoggedInUserSpace").html(userNameValue + " is logged in");
+            $("#rightBox").hide();
+
+        }).fail(function(){
+
+            alert("Username or Password incorrect");
+        })
+    };
+
+    function logOutFunction(){
+
+        $.post("/api/logout").done(function() {
+
+            alert("log out successful!");
+
+            var loggedInPerson = $("#theLoggedInUserSpace");
+
+            if(loggedInPerson.html()){
+
+                loggedInPerson.empty();
+                location.reload();//location.reload() is the same as refresh the page
+            }
+        })
+    }
+
+    function signUpFunction() {
+
+        var userNameValue = $("#userId").val();
+        var passwordValue = $("#passwordId").val();
+        passwordValue = passwordValue.toString();
+
+        var newUserAndPasswordObject = { name: userNameValue , pwd: passwordValue};
+
+        $.post("api/players", newUserAndPasswordObject, function(){
+
+            alert("Sign Up successful");
+        }).fail(function(){
+
+           if(!userNameValue){
+
+               alert("please add a username");
+            }else{
+                alert("Name already taken");
+
+            }
+        })
+    }
+
+    //Create list of games info
+    function createListOfGames(data){
+
+           var theList = $("#theList");
+           var theData = data.games;
+           //var theLoggedInPlayer = data.currentPlayer.name;
+           //console.log(theLoggedInPlayer);
+
+            $.each(theData, function(key,value){
+
+                var newListItem = $("<li>" + "Game no. " + value.gameId + "," + " Created: "+ value.created + "," + "</li>");
+
+                $.each(value.gamePlayers, function(key2,value2){
+
+                    console.log(value.gamePlayers.length);
+                    if(value.gamePlayers.length == 2){
+
+                        var theEmail = value2.player.email;
+
+                        newListItem.append(" " + theEmail + " ");
+                        newListItem.append('<button onclick="takeMeToMyGame(\'' + value2.id + '\',\'' + theEmail + '\')">GO TO GAME</button>');
+                    }
+                    if(value.gamePlayers.length == 1){
+                       var theEmail = value2.player.email;
+
+                        newListItem.append(" " + theEmail + " ");
+                        newListItem.append('<button onclick="takeMeToMyGame(\'' + value2.id + '\',\'' + theEmail + '\')">GO TO GAME</button>');
+                        newListItem.append('<button onclick="joinGame(\'' + value.gameId + '\')">JOIN GAME</button>');
+
+                    }
+                })
+
+            theList.append(newListItem);
+
+            });
+    }
+
+    function takeMeToMyGame(theGamePlayerID, theEmail){
+
+    $.get("api/games", function(data){
+
+        console.log(data.currentPlayer);
+
+        if(data.currentPlayer != null){
+
+                var theCurrentPlayerName = data.currentPlayer.name;
+                var theCurrentPlayerId = data.currentPlayer.id;
+
+                console.log(theCurrentPlayerName);
+
+                if(theCurrentPlayerName == theEmail){
+
+                     window.open("http://localhost:8080/games.html?gp=" + theGamePlayerID + "","_self");
+
+                } else{
+
+                    alert("YOU AREN'T IN THIS GAME!!");
+                }
+
+        }else{
+            alert("YOU MUST LOG IN TO SEE YOUR GAMES");
+        }
+
+    })
+    }
+
+    function createGameFunction(){
+
+        var checkIfSomeoneIsLoggedIn = $("#userId").val();
+
+        if(checkIfSomeoneIsLoggedIn){
+
+            //SOMEONE IS LOGGED IN - SEND SHIT TO CREATE GAME
+            $.post("api/games", function(){
+
+            })
+            location.reload();
+
+        }else{
+            alert("you must log in to create a game");
+        }
+    }
+
+    function joinGame(gameId){
+
+           $.ajax({
+
+            url: "api/games/" + gameId + "/players",
+            type: "POST",
+            success: function(data){
+
+                alert("SUCCESS!");
+                theGamePlayerID = data.newGpID;
+                window.open("http://localhost:8080/games.html?gp=" + theGamePlayerID + "","_self");
+
+            },
+            error: function(){
+                alert("YOU MUST SIGN IN TO JOIN A GAME");
+            }
+        });
+    }
 
 
 

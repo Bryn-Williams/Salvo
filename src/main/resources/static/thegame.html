@@ -7,32 +7,54 @@
 </head>
 <body>
 
-<div class="center">
+<div class="center" id="header">
     <h1>BATTLESHIPS!</h1>
 </div>
 
-<div id="theLoginSpace">
+<div id="createGameButDiv" class="center">
+    <button onclick="createGameFunction()">CREATE NEW GAME!</button>
+</div>
 
-    <form>
-        <label>Enter Username </label><input type="text" name="user">
-        <label>Enter Password </label><input type="text" name="password">
-        <input type="submit" value="Submit">
-    </form>
+<h1 id="theLoggedInUserSpace" class="center"></h1>
 
+<div id="mainBody" class="center">
 
+    <div id="leftBox" class="centerColumn" >
+        <h2>SCOREBOARD</h2>
+        <div id="scoreBoard">
+        </div>
+    </div>
 
+    <div id="rightBox" class="centerColumn">
+        <h2>LOGIN</h2>
+        <div id="theLoginSpace" class="center">
+            <form>
+                <label class="labels">Enter Username </label> <input type="text" name="user" id="userId"> <br>
+                <label class="labels">Enter Password </label> <input type="password" name="password" id="passwordId"><br>
+
+                <div class="center">
+                    <input type="button" value="LOG IN" onclick="logInFunction()" class="logSignInBut">
+                    <input type="button" value="SIGN UP" onclick="signUpFunction()" class="logSignInBut">
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 
-<div id="scoreBoard">
+<div id="gameListDiv">
+    <ol id="theList">
+    </ol>
 </div>
 
-<div id="whoIsPlayingNViewing"></div>
 
-<div id="bothGrids">
-    <div id="divForGrid"></div>
-    <div id="divForSalvoes"></div>
+<div id="footerBar">
+    <input id="logOutBut" type="button" value="LOG OUT" onclick="logOutFunction()">
 </div>
+
+
+
+
 
 <!--JAVASCRIPT FILES-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

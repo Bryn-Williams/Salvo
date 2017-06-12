@@ -14,6 +14,7 @@ public class Player {
     private long Id;
     private String userName;
 
+
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
     Set<GamePlayer> GamePlayers;
 
@@ -154,6 +155,15 @@ public class Player {
 
         return totalScore;
 
+    }
+
+
+    public Set<GamePlayer> getGamePlayers() {
+        return GamePlayers;
+    }
+
+    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
+        GamePlayers = gamePlayers;
     }
 
 
