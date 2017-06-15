@@ -201,19 +201,17 @@ $(document).ready(function () {
 
     function createGameFunction(){
 
-        var checkIfSomeoneIsLoggedIn = $("#userId").val();
+         $.get("api/games", function(data){
 
-        if(checkIfSomeoneIsLoggedIn){
+            if(data.currentPlayer != null){
+                $.post("api/games", function(){
+                })
+                location.reload();
 
-            //SOMEONE IS LOGGED IN - SEND SHIT TO CREATE GAME
-            $.post("api/games", function(){
-
-            })
-            location.reload();
-
-        }else{
-            alert("you must log in to create a game");
-        }
+            }else{
+                alert("you must log in to create a game");
+            }
+         })
     }
 
     function joinGame(gameId){
@@ -234,6 +232,40 @@ $(document).ready(function () {
             }
         });
     }
+
+   /* //START OF ADDING SHIPS
+    function getValuesOfShipPlacementAndConstructJsonObject(){
+
+        var objectOfShipLocation = {
+
+            shipType: "",
+            shipLocation: []
+        }
+
+        //ADD OBJECTS ABOVE TO ARRAY BELOW!!
+
+
+        var arrayOfShips = [];
+
+
+        //SEND YOUR NEWLY CREATED OBJECT
+        $.ajax({
+
+            url: "api/games/players/{gpId}/ships",
+            type: "POST",
+            contentType:"application/json",
+            //TODO add stringify to data: arrayOfShips
+            data: arrayOfShips,
+            success: function(){
+
+                alert("SUCCESS!");
+
+            },
+            error: function(){
+                alert("ERROR");
+            }
+        })
+    }*/
 
 
 

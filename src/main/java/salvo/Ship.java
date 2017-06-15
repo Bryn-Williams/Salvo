@@ -52,8 +52,7 @@ public class Ship {
         this.shipLocation = shipLocation;
     }
 
-    //METHOD TO CREATE INSTANCES AKA CONSTRUCTOR METHOD!!
-
+    //CONSTRUCTOR METHOD!!
     public Ship(){}
 
     public Ship(String shipType, List shipLocation){

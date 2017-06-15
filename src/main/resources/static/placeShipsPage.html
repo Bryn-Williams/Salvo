@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Place Ships Page</title>
+    <link href="Styles/thegame.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+<div class="center" id="header">
+    <h1>BATTLESHIPS!</h1>
+</div>
+
+<div class="center">
+    <h2>PLACE YOUR SHIPS!!</h2>
+</div>
+
+
+<div id="footerBar">
+    <input id="logOutBut" type="button" value="LOG OUT" onclick="logOutFunction()">
+</div>
+
+
+<!--
+<div id="whoIsPlayingNViewing"></div>
+-->
+
+<div id="bothGrids">
+    <div id="divForGrid">
+    </div>
+
+    <div id="divForShipInfo">
+        <table>
+            <tr>
+                <th>Ships</th>
+                <th>Length</th>
+            </tr>
+            <tr id="carrierRow">
+                <td><input id="carrier" type="radio" name="shiptype" value="carrier" onclick="isRadioBoxChecked('carrier', 5)">Aircraft Carrier</td>
+                <td>5</td>
+            </tr>
+            <tr id="battleshipRow">
+                <td><input id="battleship" type="radio" name="shiptype" value="battleship" onclick="isRadioBoxChecked('battleship', 4)"> Battleship</td>
+                <td>4</td>
+            </tr>
+            <tr id="submarineRow">
+                <td><input id="submarine" type="radio" name="shiptype" value="submarine" onclick="isRadioBoxChecked('submarine', 3)"> Submarine</td>
+                <td>3</td>
+            </tr>
+            <tr id="destroyerRow">
+                <td><input id="destroyer" type="radio" name="shiptype" value="destroyer" onclick="isRadioBoxChecked('destroyer', 3)"> Destroyer</td>
+                <td>3</td>
+            </tr>
+            <tr id="patrolboatRow">
+                <td><input id="patrolboat" type="radio" name="shiptype" value="PatrolBoat" onclick="isRadioBoxChecked('patrolboat', 2)"> Patrol Boat</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td colspan="2"><input id="horizontal" type="radio" name="horver" value="horizontal" onclick="changeToHoriz()">Horizontal <input id="vertical" type="radio" name="horver" value="vertical" checked onclick="changeToHoriz()">Vertical</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!--JAVASCRIPT FILES-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="scripts/placeShips.js" type="text/javascript"></script>
+</body>
+</html>
+

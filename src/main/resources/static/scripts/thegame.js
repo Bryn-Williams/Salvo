@@ -159,10 +159,6 @@ $(document).ready(function () {
         })
     };
 
-
-
-
-
     //ADD YOUR SALVOES
     function fillBackgroundColorOfSalvoGrid(gridLocation, eachTurn) {
 
@@ -175,19 +171,6 @@ $(document).ready(function () {
             $("#" + gridLocation + gridLocation).html(turnNumber);
 
      };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     //ADD THE SHIPS
     function fillBackgroundColor(loc) {

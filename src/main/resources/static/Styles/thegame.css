@@ -53,6 +53,7 @@ tr:hover {
     display: flex;
     -ms-flex-pack: distribute;
         justify-content: space-around;
+        align-items: center;
 }
 
 tr{
@@ -225,3 +226,55 @@ body {
 
     -webkit-animation: slide 10s linear infinite;
 }
+
+/*START OF SHIP PLACEMENT CSS*/
+.draggable {
+  float:left;
+  height: 50px;
+  background-color: gray;
+ }
+
+.patrolBoat {
+  width: 100px;
+}
+
+.destroyer {
+  width: 150px;
+}
+
+.submarine {
+    width: 150px;
+}
+
+
+/*
+.battleship {
+    width: 200px;
+}
+
+*/
+
+ .draggable p {
+  text-align: center;
+  /*padding: -20px 0 0 0;*/
+  font-weight:900;
+ }
+
+ .draggable.ui-draggable-dragging {
+    background: red;
+ }
+
+ .vertToHorizPatrol {
+     width: 50px;
+     height: 100px;
+ }
+
+ .vertToHorizDestroyer {
+    width: 50px;
+    height: 150px;
+ }
+/*
+ .vertToHorizBattleship {
+    width: 50px;
+    height: 200px;
+ }*/

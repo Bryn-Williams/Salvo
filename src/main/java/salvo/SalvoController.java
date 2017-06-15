@@ -19,6 +19,8 @@ public class SalvoController {
     private GamePlayerRepository gamePlayerRepo;
     @Autowired
     private PlayerRepository playerRepo;
+    @Autowired
+    private ShipRepository shipRepo;
 
 
    @RequestMapping("/games")
@@ -281,7 +283,6 @@ public class SalvoController {
         Game currentGame = gameRepo.findOne(xx);
 
         List<Player> thisPlayerId = playerRepo.findByUserName(authentication.getName());
-
         Player theloggedinplayer = thisPlayerId.get(0);
 
 
@@ -310,4 +311,49 @@ public class SalvoController {
         return new ResponseEntity<>(makeMap("newGpID", theGPWhoIsGoingToJoin.getId()), HttpStatus.CREATED);
 
     }
+
+
+    //METHOD FOR LIST OF PLACED SHIPS
+    @RequestMapping(path = "/games/players/{gpId}/ships", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> receiveListOfShipObjectsWithLocationsAndSaveInShipRepo(@PathVariable Long gpId, @RequestBody Set<Ship> ship, Authentication authentication){
+
+        GamePlayer currentGamePlayer = gamePlayerRepo.findOne(gpId);
+        List<Player> thisPlayerId = playerRepo.findByUserName(authentication.getName());
+
+        Player authenticatedPlayer = thisPlayerId.get(0);
+
+
+        //there is no current user logged in
+        if(authentication == null){
+            return new ResponseEntity<>(makeMap("error", "YOU MUST SIGN IN TO JOIN"), HttpStatus.UNAUTHORIZED);
+        }
+
+        //there is no game player with the given ID
+        if(currentGamePlayer.getId() != gpId){
+            return new ResponseEntity<>(makeMap("error", "NO GAMEPLAYER WITH GIVEN ID"), HttpStatus.UNAUTHORIZED);
+        }
+
+        //the current user is not the game player the ID references
+        if(currentGamePlayer.getPlayer().getId() != authenticatedPlayer.getId()){
+            return new ResponseEntity<>(makeMap("error", "NO GAMEPLAYER WITH GIVEN ID"), HttpStatus.UNAUTHORIZED);
+        }
+
+        //A Forbidden response should be sent if the user already has ships placed
+        if(!currentGamePlayer.getMyships().isEmpty()){
+            return new ResponseEntity<>(makeMap("error", "SHIPS ALREADY PLACED"), HttpStatus.FORBIDDEN);
+        }
+
+        for(Ship currentShip: ship){
+
+            shipRepo.save(currentShip);
+
+            currentGamePlayer.addShip(currentShip);
+        }
+
+        //gamePlayerRepo.save(currentGamePlayer);
+
+        return new ResponseEntity<>(makeMap("YAY", "YOUR SHIPS HAVE BEEN PLACED"), HttpStatus.CREATED);
+
+    }
+
 }
