@@ -162,8 +162,6 @@ $(document).ready(function () {
     //ADD YOUR SALVOES
     function fillBackgroundColorOfSalvoGrid(gridLocation, eachTurn) {
 
-
-
             $("#" + gridLocation + gridLocation).css("background-color", "green");
 
             //ADD TURN NUMBER TO SHOTS FIRED

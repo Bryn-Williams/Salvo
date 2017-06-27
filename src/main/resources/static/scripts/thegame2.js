@@ -6,8 +6,6 @@ $(document).ready(function () {
 
         createListOfGames(scoreboardData);
 
-        checkIfLogIn();
-
   });
 });
 
@@ -25,8 +23,13 @@ $(document).ready(function () {
 
                 $("#theLoggedInUserSpace").html(userNameValue + " is logged in");
             }
-         })
 
+            if(data.currentPlayer == null){
+
+                  window.open("http://localhost:8080/thegame.html", "_self");
+                  return;
+            }
+         })
     }
 
     //CREATE SCORE BOARD
@@ -68,7 +71,7 @@ $(document).ready(function () {
         }
     }
 
-    //GET DATA FROM FORM
+
     function logInFunction(){
 
        var userNameValue = $("#userId").val();
@@ -79,11 +82,11 @@ $(document).ready(function () {
         //Create object to send
         var userAndPasswordObject = { name: userNameValue , pwd: passwordValue};
 
-        //console.log(userAndPasswordObject);
+        console.log(userAndPasswordObject);
 
         $.post("/api/login", userAndPasswordObject, function(){
 
-            alert("Log in successful!")
+            //alert("Log in successful!")
 
             $("#theLoggedInUserSpace").html(userNameValue + " is logged in");
             $("#rightBox").hide();
@@ -100,13 +103,8 @@ $(document).ready(function () {
 
             alert("log out successful!");
 
-            var loggedInPerson = $("#theLoggedInUserSpace");
+            checkIfLogIn();
 
-            if(loggedInPerson.html()){
-
-                loggedInPerson.empty();
-                location.reload();//location.reload() is the same as refresh the page
-            }
         })
     }
 
@@ -118,22 +116,26 @@ $(document).ready(function () {
 
         var newUserAndPasswordObject = { name: userNameValue , pwd: passwordValue};
 
+        console.log(newUserAndPasswordObject);
+
+
         $.post("api/players", newUserAndPasswordObject, function(){
 
             alert("Sign Up successful");
+
+            logInFunction();
+
         }).fail(function(){
 
            if(!userNameValue){
 
                alert("please add a username");
             }else{
-                alert("Name already taken");
-
+                alert("Username already taken");
             }
         })
     }
 
-    //Create list of games info
     function createListOfGames(data){
 
            var theList = $("#theList");
@@ -147,7 +149,7 @@ $(document).ready(function () {
 
                 $.each(value.gamePlayers, function(key2,value2){
 
-                    console.log(value.gamePlayers.length);
+                    //console.log(value.gamePlayers.length);
                     if(value.gamePlayers.length == 2){
 
                         var theEmail = value2.player.email;
@@ -205,8 +207,11 @@ $(document).ready(function () {
 
             if(data.currentPlayer != null){
                 $.post("api/games", function(){
+
                 })
-                location.reload();
+
+            //OPENS PLACE SHIPS PAGE!
+            window.open("http://localhost:8080/placeShipsPage.html","_self");
 
             }else{
                 alert("you must log in to create a game");
@@ -223,8 +228,10 @@ $(document).ready(function () {
             success: function(data){
 
                 alert("SUCCESS!");
-                theGamePlayerID = data.newGpID;
-                window.open("http://localhost:8080/games.html?gp=" + theGamePlayerID + "","_self");
+                //var theGamePlayerID = data.newGpID;
+
+                //window.open("http://localhost:8080/games.html?gp=" + theGamePlayerID + "","_self");
+                window.open("http://localhost:8080/placeShipsPage.html","_self");
 
             },
             error: function(){
@@ -233,39 +240,340 @@ $(document).ready(function () {
         });
     }
 
-   /* //START OF ADDING SHIPS
-    function getValuesOfShipPlacementAndConstructJsonObject(){
+    function isRadioBoxChecked(shipType, shipLength) {
 
-        var objectOfShipLocation = {
+            $("*").off();
 
-            shipType: "",
-            shipLocation: []
+            if ($('#' + shipType).is(':checked') && $("#vertical").is(':checked')) {
+
+                $(".tiles").hover(function () {
+
+                    var theCurrentSquare = this.id;
+                    var theNumberOfCurrentSquare = theCurrentSquare.substring(1);
+                    var theLetterOfCurrentSquare = theCurrentSquare.substring(0, 1);
+
+                    var arrayOfShipPositions = [];
+                    arrayOfShipPositions.push(theCurrentSquare);
+
+                    var colorOfSquare = $("#" + theCurrentSquare).css("background-color");
+
+                    for (var i = 1; i < shipLength; i++) {
+
+                        var numberPlusOne = parseInt(theNumberOfCurrentSquare) + i;
+                        numberPlusOne = numberPlusOne.toString();
+
+                        var squareBelowThis = theLetterOfCurrentSquare + numberPlusOne;
+
+                        if (colorOfSquare == "rgb(255, 0, 0)" || $("#" + squareBelowThis).css("background-color") == "rgb(255, 0, 0)") {
+                            return;
+                        }
+
+                        $(this).css("background-color", "yellow");
+                        $("#" + squareBelowThis).css("background-color", "yellow");
+
+                        arrayOfShipPositions.push(squareBelowThis);
+                    }
+
+
+                    //BELOW IS FUNCTION TO MAKE SQUARES TRANSPARENT IF SHIP PLACEMENT IS INVALID
+                    var indexOfLastArrayItem = arrayOfShipPositions.length - 1;
+                    var coordinateOfLastSquare = arrayOfShipPositions[indexOfLastArrayItem];
+                    var theNumberOfCoordinateOfLastSquare = coordinateOfLastSquare.slice(1);
+
+                    if (theNumberOfCoordinateOfLastSquare == 11 || theNumberOfCoordinateOfLastSquare == 12 || theNumberOfCoordinateOfLastSquare == 13 || theNumberOfCoordinateOfLastSquare == 14 || theNumberOfCoordinateOfLastSquare == 15) {
+
+                        for (var b = 0; b < arrayOfShipPositions.length; b++) {
+
+                            $(this).css("background-color", "transparent");
+
+                            var currentSquare = arrayOfShipPositions[b];
+                            $("#" + currentSquare).css("background-color", "transparent");
+
+                        }
+                    }
+                    //END OF FUNCTION FOR INVALID PLACEMENT
+
+
+                    //FUNCTION TO PLACE SHIPS ON CLICK
+                    $(this).click(function () {
+
+                        if ($(this).css("background-color") != "rgb(255, 255, 0)") {
+                            return;
+                        } else {
+
+                            for (var z = 0; z < arrayOfShipPositions.length; z++) {
+
+                                var squareToFillOnceClicked = arrayOfShipPositions[z];
+                                $("#" + squareToFillOnceClicked).css("background-color", "red");
+
+                            }
+                        }
+
+                        //REMOVES SHIP FROM TABLE ONCE CLICKED
+                        var theRowToRemove = shipType + "Row";
+                        $('#' + theRowToRemove).remove();
+                        $("*").off();
+                        //END OF REMOVAL FUNCTION
+
+                        //SEND SHIP POSITION TO OTHER FUNCTION SO THAT IT CAN BE SAVED IN DATABASE
+                        getValuesOfShipPlacementAndConstructJsonObject(arrayOfShipPositions, shipType);
+                    });
+
+                    //WHEN MOUSE LEAVES SQUARE
+                }, function () {
+
+                    var theCurrentSquare = this.id;
+                    var theNumberOfCurrentSquare = theCurrentSquare.substring(1);
+                    var theLetterOfCurrentSquare = theCurrentSquare.substring(0, 1);
+                    var colorOfSquare = $("#" + theCurrentSquare).css("background-color");
+
+                    if (colorOfSquare == "rgb(255, 0, 0)") {
+                        return;
+
+                    } else {
+
+                        for (var i = 1; i < shipLength; i++) {
+
+                            var numberPlusOne = parseInt(theNumberOfCurrentSquare) + i;
+                            numberPlusOne = numberPlusOne.toString();
+
+                            var squareBelowThis = theLetterOfCurrentSquare + numberPlusOne;
+
+                            if ($("#" + squareBelowThis).css("background-color") == "rgb(255, 0, 0)") {
+                                return;
+                            }
+
+                            $(this).css("background-color", "transparent");
+                            $("#" + squareBelowThis).css("background-color", "transparent");
+                        }
+                    }
+                });
+            }
+
+
+
+
+            //CODE TO CHANGE TO HORIZONTAL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            if ($('#' + shipType).is(':checked') && $("#horizontal").is(':checked')) {
+
+                $(".tiles").hover(function () {
+
+                    var theCurrentSquare = this.id;
+                    var theNumberOfCurrentSquare = theCurrentSquare.substring(1);
+                    var theLetterOfCurrentSquare = theCurrentSquare.substring(0, 1);
+
+                    var arrayOfShipPositions = [];
+                    arrayOfShipPositions.push(theCurrentSquare);
+
+                    var alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+                    var indexOfCurrentLetter = alphabet.indexOf(theLetterOfCurrentSquare);
+                    var colorOfSquare = $("#" + theCurrentSquare).css("background-color");
+
+
+                    for (var x = 1; x < shipLength; x++) {
+
+                        var letterToRightOfThis = indexOfCurrentLetter + x;
+                        var squareToRight = alphabet[letterToRightOfThis] + theNumberOfCurrentSquare;
+
+                        if (colorOfSquare == "rgb(255, 0, 0)" || $("#" + squareToRight).css("background-color") == "rgb(255, 0, 0)") {
+                            return;
+                        }
+
+                        $(this).css("background-color", "blue");
+                        $("#" + squareToRight).css("background-color", "blue");
+
+                        arrayOfShipPositions.push(squareToRight);
+                    }
+
+                    //BELOW IS FUNCTION TO MAKE SQUARES TRANSPARENT IF SHIP PLACEMENT IS INVALID
+
+                    var indexOfLastArrayItem = arrayOfShipPositions.length - 1;
+                    var coordinateOfLastSquare = arrayOfShipPositions[indexOfLastArrayItem];
+
+                    var letterOfCoordinateOfLastSquare = coordinateOfLastSquare.substring(0, 1);
+
+                    console.log(letterOfCoordinateOfLastSquare);
+
+
+                    if (letterOfCoordinateOfLastSquare == "u") {
+
+                        for (var b = 0; b < arrayOfShipPositions.length; b++) {
+
+                            $(this).css("background-color", "transparent");
+
+                            var currentSquare = arrayOfShipPositions[b];
+                            $("#" + currentSquare).css("background-color", "transparent");
+
+                        }
+                    }
+                    //END OF FUNCTION FOR INVALID PLACEMENT*/
+
+                    //FUNCTION TO PLACE SHIPS ON CLICK
+                    $(this).click(function () {
+
+                        if ($(this).css("background-color") != "rgb(0, 0, 255)") {
+                            return;
+                        } else {
+
+                            for (var z = 0; z < arrayOfShipPositions.length; z++) {
+
+                                var squareToFillOnceClicked = arrayOfShipPositions[z];
+                                $("#" + squareToFillOnceClicked).css("background-color", "red");
+
+                            }
+                        }
+
+                        //REMOVES SHIP FROM TABLE ONCE CLICKED
+                        var theRowToRemove = shipType + "Row";
+                        $('#' + theRowToRemove).remove();
+                        $("*").off();
+                        //END OF REMOVAL FUNCTION
+
+                        //SEND SHIP POSITION TO OTHER FUNCTION SO THAT IT CAN BE SAVED IN DATABASE
+                        getValuesOfShipPlacementAndConstructJsonObject(arrayOfShipPositions, shipType);
+                    });
+
+                    //WHEN MOUSE LEAVES SQUARE
+                }, function () {
+
+                    var theCurrentSquare = this.id;
+                    var theNumberOfCurrentSquare = theCurrentSquare.substring(1);
+                    var theLetterOfCurrentSquare = theCurrentSquare.substring(0, 1);
+                    var colorOfSquare = $("#" + theCurrentSquare).css("background-color");
+
+
+                    var alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+                    var indexOfCurrentLetter = alphabet.indexOf(theLetterOfCurrentSquare);
+
+                    if (colorOfSquare == "rgb(255, 0, 0)") {
+                        return;
+
+                    } else {
+
+                        for (var x = 1; x < shipLength; x++) {
+
+                            var letterToRightOfThis = indexOfCurrentLetter + x;
+
+                            if ($("#" + alphabet[letterToRightOfThis] + theNumberOfCurrentSquare).css("background-color") == "rgb(255, 0, 0)") {
+                                return;
+                            }
+
+                            $(this).css("background-color", "transparent");
+                            $("#" + alphabet[letterToRightOfThis] + theNumberOfCurrentSquare).css("background-color", "transparent");
+                        }
+                    }
+                });
+            }
+        };
+
+    function changeToHoriz() {
+
+            var shipType = $('input[type=radio][name=shiptype]:checked').attr('id');
+
+            if (shipType == "carrier") {
+                var shiplength = 5;
+                isRadioBoxChecked(shipType, shiplength);
+            }
+
+            if (shipType == "battleship") {
+                var shiplength = 4;
+                isRadioBoxChecked(shipType, shiplength);
+            }
+
+            if (shipType == "submarine" || shipType == "destroyer") {
+                var shiplength = 3;
+                isRadioBoxChecked(shipType, shiplength);
+            }
+
+            if (shipType == "patrolboat") {
+                var shiplength = 2;
+                isRadioBoxChecked(shipType, shiplength);
+            }
         }
 
-        //ADD OBJECTS ABOVE TO ARRAY BELOW!!
+    var fleet = [];
+    function getValuesOfShipPlacementAndConstructJsonObject(arrayOfShipPositionse, shipTypee){
+
+                var shipLocationAndType = {};
+
+                shipLocationAndType.shipLocation = arrayOfShipPositionse;
+                shipLocationAndType.shipType = shipTypee;
+
+                fleet.push(shipLocationAndType);
+
+                sendFleetToAjaxFunction(fleet);
+
+        }
+
+    function sendFleetToAjaxFunction(fleet){
 
 
-        var arrayOfShips = [];
-
-
-        //SEND YOUR NEWLY CREATED OBJECT
-        $.ajax({
-
-            url: "api/games/players/{gpId}/ships",
-            type: "POST",
-            contentType:"application/json",
-            //TODO add stringify to data: arrayOfShips
-            data: arrayOfShips,
-            success: function(){
-
-                alert("SUCCESS!");
-
-            },
-            error: function(){
-                alert("ERROR");
+            if(fleet.length != 5){
+                return;
             }
-        })
-    }*/
+
+             //$GET TO GET GP ID
+             $.get("api/games", function(data){
+
+    /*
+                //IF YOU CREATE A GAME BELOW IS THE GAMEPLAYER ID
+
+
+                var lastGameIndex = data.games.length - 1;
+                console.log(data.games[lastGameIndex]);
+
+
+                var gamePlayerId = data.games[lastGameIndex].gamePlayers["0"].id;
+                //IF YOU JOIN A GAME BELOW IS THE GPID
+                */
+                //START OF SHIT TO GET GPID
+                var allgpids = [];
+
+                for(var x = 0; x < data.games.length; x++){
+                    for(var y = 0; y < data.games[x].gamePlayers.length; y++){
+
+                        allgpids.push(data.games[x].gamePlayers[y].id);
+                    }
+                }
+
+                var gamePlayerId = 0;
+
+                for(var z=0; z< allgpids.length; z++){
+                    if(allgpids[z] > gamePlayerId){
+                        gamePlayerId = allgpids[z];
+                     }
+                }
+                //END OF SHIT TO GET GPID
+
+                console.log(allgpids);
+
+
+                //console.log(fleet);
+
+                //SEND THE FLEET(ARRAY) TO THE DB
+                $.ajax({
+
+                    url: "api/games/players/" + gamePlayerId + "/ships",
+                    type: "POST",
+                    contentType:"application/json",
+                    data: JSON.stringify(fleet),
+                    success: function(){
+
+                        alert("SUCCESS!");
+                        window.open("http://localhost:8080/games.html?gp=" + gamePlayerId ,"_self");
+                        //placeFirstRoundOfSalvoes(gamePlayerId);
+
+                    },
+                    error: function(){
+                        alert("ERROR");
+                    }
+                })
+             })
+        }
+
+
+
+
 
 
 

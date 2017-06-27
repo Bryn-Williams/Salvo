@@ -22,7 +22,6 @@ public class Player {
     Set<Score> scores;
 
     private String password;
-
     //END OF FIELDS
 
     public Player() {}

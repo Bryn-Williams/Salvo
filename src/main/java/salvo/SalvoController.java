@@ -21,6 +21,8 @@ public class SalvoController {
     private PlayerRepository playerRepo;
     @Autowired
     private ShipRepository shipRepo;
+    @Autowired
+    private SalvoRepository salvoRepo;
 
 
    @RequestMapping("/games")
@@ -47,12 +49,12 @@ public class SalvoController {
 
             Map<String, Object> dtoxx = new LinkedHashMap<>();
 
-            List<Player> thisPlayerId = playerRepo.findByUserName(authentication.getName());
+            Player thisPlayerId = playerRepo.findByUserName(authentication.getName());
 
-            Player theMoFRO = thisPlayerId.get(0);
+            //Player theMoFRO = thisPlayerId.get(0);
 
-            dtoxx.put("id", theMoFRO.getId());
-            dtoxx.put("name", theMoFRO.getUserName());
+            dtoxx.put("id", thisPlayerId.getId());
+            dtoxx.put("name", thisPlayerId.getUserName());
 
             return dtoxx;
 
@@ -149,9 +151,7 @@ public class SalvoController {
         }else{
 
             return new ResponseEntity<Map<String, Object>>(makeMap("error", "YOU CANT SEE THIS"), HttpStatus.UNAUTHORIZED);
-
         }
-
 
     }
 
@@ -193,7 +193,7 @@ public class SalvoController {
 
             themap.put("turn", salvoe.getTurnNumber());
             themap.put("locations", salvoe.getSalvoLocation());
-            themap.put("gamePlayer", salvoe.getGamePlayers().getPlayer().getId());
+            themap.put("gamePlayer", salvoe.getGamePlayers().getId());
             dto999.add(themap);
         }
 
@@ -210,21 +210,19 @@ public class SalvoController {
                 .collect(Collectors.toList()));
 
         return listofgames;
-
-    };
+    }
 
 
     public Long getloggedPlayer(Authentication authentication){
 
-        List<Player> thisPlayerId = playerRepo.findByUserName(authentication.getName());
-
-        Player theloggedinplayer = thisPlayerId.get(0);
+        Player theloggedinplayer = playerRepo.findByUserName(authentication.getName());
+        //Player theloggedinplayer = thisPlayerId.get(0);
 
         Long person = theloggedinplayer.getId();
 
         return person;
 
-    };
+    }
 
 
 
@@ -232,13 +230,13 @@ public class SalvoController {
     @RequestMapping(path = "/players", method = RequestMethod.POST)
     public ResponseEntity<String> createUser(@RequestParam String name, @RequestParam String pwd) {
 
-        List<Player> player = playerRepo.findByUserName(name);
+        Player theloggedinplayer = playerRepo.findByUserName(name);
 
         if (name.isEmpty()) {
             return new ResponseEntity<>("No name given", HttpStatus.FORBIDDEN);
         }
 
-        if (!player.isEmpty()) {
+        if (theloggedinplayer != null) {
             return new ResponseEntity<>("Name already used", HttpStatus.CONFLICT);
         }
 
@@ -257,9 +255,7 @@ public class SalvoController {
 
         else{
 
-            List<Player> thisPlayerId = playerRepo.findByUserName(authentication.getName());
-
-            Player theloggedinplayer = thisPlayerId.get(0);
+            Player theloggedinplayer = playerRepo.findByUserName(authentication.getName());
 
             //CREATE GAME
             Game newGame = new Game();
@@ -275,15 +271,14 @@ public class SalvoController {
     }
 
 
-
     //METHOD TO JOIN GAME
     @RequestMapping(path = "/games/{xx}/players", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> joinGame(@PathVariable Long xx, Authentication authentication) {
 
         Game currentGame = gameRepo.findOne(xx);
 
-        List<Player> thisPlayerId = playerRepo.findByUserName(authentication.getName());
-        Player theloggedinplayer = thisPlayerId.get(0);
+        Player theloggedinplayer = playerRepo.findByUserName(authentication.getName());
+        //Player theloggedinplayer = thisPlayerId.get(0);
 
 
         //IF NOBODY HAS SIGNED IN,
@@ -318,9 +313,7 @@ public class SalvoController {
     public ResponseEntity<Map<String, Object>> receiveListOfShipObjectsWithLocationsAndSaveInShipRepo(@PathVariable Long gpId, @RequestBody Set<Ship> ship, Authentication authentication){
 
         GamePlayer currentGamePlayer = gamePlayerRepo.findOne(gpId);
-        List<Player> thisPlayerId = playerRepo.findByUserName(authentication.getName());
-
-        Player authenticatedPlayer = thisPlayerId.get(0);
+        Player theloggedinplayer = playerRepo.findByUserName(authentication.getName());
 
 
         //there is no current user logged in
@@ -334,8 +327,8 @@ public class SalvoController {
         }
 
         //the current user is not the game player the ID references
-        if(currentGamePlayer.getPlayer().getId() != authenticatedPlayer.getId()){
-            return new ResponseEntity<>(makeMap("error", "NO GAMEPLAYER WITH GIVEN ID"), HttpStatus.UNAUTHORIZED);
+        if(currentGamePlayer.getPlayer().getId() != theloggedinplayer.getId()){
+            return new ResponseEntity<>(makeMap("error", "LOGGED IN PLAYER ID DOESNT EQUAL CURRENT GAMEPLAYER.PLAYER.ID"), HttpStatus.UNAUTHORIZED);
         }
 
         //A Forbidden response should be sent if the user already has ships placed
@@ -345,15 +338,51 @@ public class SalvoController {
 
         for(Ship currentShip: ship){
 
-            shipRepo.save(currentShip);
-
             currentGamePlayer.addShip(currentShip);
+            shipRepo.save(currentShip);
         }
 
-        //gamePlayerRepo.save(currentGamePlayer);
-
         return new ResponseEntity<>(makeMap("YAY", "YOUR SHIPS HAVE BEEN PLACED"), HttpStatus.CREATED);
-
     }
+
+
+    //METHOD TO STORE SALVOES
+    @RequestMapping(path = "/games/players/{gPId}/salvos", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> storeSalvoes(@PathVariable Long gPId, @RequestBody Set<Salvo> salvo, Authentication authentication){
+
+        GamePlayer currentGamePlayer = gamePlayerRepo.findOne(gPId);
+        Player theloggedinplayer = playerRepo.findByUserName(authentication.getName());
+
+        //there is no current user logged in
+        if(authentication == null){
+            return new ResponseEntity<>(makeMap("error", "YOU MUST SIGN IN TO JOIN"), HttpStatus.UNAUTHORIZED);
+        }
+
+        //there is no game player with the given ID
+        if(currentGamePlayer.getId() != gPId){
+            return new ResponseEntity<>(makeMap("error", "NO GAMEPLAYER WITH GIVEN ID"), HttpStatus.UNAUTHORIZED);
+        }
+
+        //the current user is not the game player the ID references
+        if(currentGamePlayer.getPlayer().getId() != theloggedinplayer.getId()){
+            return new ResponseEntity<>(makeMap("error", "NO GAMEPLAYER WITH GIVEN ID"), HttpStatus.UNAUTHORIZED);
+        }
+
+        //A Forbidden response should be sent if the user already has submitted a salvo for the turn listed.
+
+        //currentGamePlayer.addSalvo(salvo);
+        //salvoRepo.save(salvo);
+
+        for(Salvo currentSalvoPosition: salvo){
+
+            currentGamePlayer.addSalvo(currentSalvoPosition);
+            salvoRepo.save(currentSalvoPosition);
+        }
+
+
+
+        return new ResponseEntity<>(makeMap("YAY", "YOUR SALVOES HAVE BEEN PLACED"), HttpStatus.CREATED);
+    }
+
 
 }

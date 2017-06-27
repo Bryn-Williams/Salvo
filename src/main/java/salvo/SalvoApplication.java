@@ -140,12 +140,12 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
             @Override
             public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 
-                List<Player> players = playerRepository.findByUserName(userName);
-                if (!players.isEmpty()) {
+				Player theloggedinplayer = playerRepository.findByUserName(userName);
+                if (theloggedinplayer != null) {
 
-                    Player player = players.get(0);
+                    //Player player = players.get(0);
 
-                    return new User(player.getUserName(), player.getPassword(),
+                    return new User(theloggedinplayer.getUserName(), theloggedinplayer.getPassword(),
                             AuthorityUtils.createAuthorityList("USER"));
 
                 } else {
