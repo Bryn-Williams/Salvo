@@ -19,11 +19,10 @@ public class Salvo {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="gamePlayer_id")
     private GamePlayer gamePlayers;
-    
+
     //END OF INSTANCE VARIABLES
 
     //CONSTRUCTOR METHOD
-
     public Salvo(){}
     public Salvo(int turnNumber , List salvoLocation){
 

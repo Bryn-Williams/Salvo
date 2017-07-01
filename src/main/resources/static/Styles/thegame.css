@@ -30,11 +30,6 @@ table {
     border: 1px solid black;
     border-radius: 10px;
     padding: 20px;
-    width: 450px;
-}
-
-#divForGrid{
-    width: 550px;
 }
 
 th, td {
@@ -54,6 +49,7 @@ tr:hover {
     -ms-flex-pack: distribute;
         justify-content: space-around;
         align-items: center;
+    flex-wrap: wrap;
 }
 
 tr{
@@ -142,14 +138,14 @@ body {
 
 .mainrow {
 
-    height: 50px;
+    height: 40px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
 }
 
 .tiles, .salvotiles {
-    width: 50px;
+    width: 40px;
     border: 1px solid red;
 }
 
@@ -182,7 +178,7 @@ body {
     -webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;
-    width: 50px;
+    width: 40px;
 }
 
 .blue {
@@ -273,8 +269,21 @@ body {
     width: 50px;
     height: 150px;
  }
-/*
- .vertToHorizBattleship {
-    width: 50px;
-    height: 200px;
- }*/
+
+ #hitsOnYouTable{
+
+    background-color: rgba(255, 255, 255, 0.33);
+ }
+
+.hitTiles{
+
+    border: 1px solid black;
+    width: 40px;
+    height: 40px;
+}
+
+.flex {
+
+    display: flex;
+
+}

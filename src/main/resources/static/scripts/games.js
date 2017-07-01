@@ -137,22 +137,30 @@ $(document).ready(function(){
                      }
 
                  fillBackgroundColor(chloesSalvos);//ADD CHLOE'S SALVOS TO JACKS GRID TO SEE IF JACK HAS BEEN HIT
-                 //addGamePlayerInfo(x, salvoData);
+                 addGamePlayerInfo(x, salvoData);
              }
 
             //addGamePlayerInfo(x, salvoData);
     };
 
     //ADD YOUR SALVOES TO RIGHT GRID
-    function fillBackgroundColorOfSalvoGrid(gridLocation, eachTurn) {
-
+    function fillBackgroundColorOfSalvoGrid(gridLocation, eachTurn, hitsOnYourOpponent) {
 
                 $("#" + gridLocation).css("background-color", "green");
 
                 //ADD TURN NUMBER TO SHOTS FIRED
                 var turnNumber = eachTurn;
                 $("#" + gridLocation).html(turnNumber);
-         };
+
+                for(var x = 0; x < hitsOnYourOpponent.length; x++){
+
+                    var currentLocation = hitsOnYourOpponent[x].hitLocation;
+
+                     //CHANGE COLOR OF SQUARE IF U HIT YOUR OPPONENT!
+                     $("#" + currentLocation + currentLocation).css("background-color", "red");
+                     $("#" + currentLocation + currentLocation).html("hit");
+                }
+     };
 
     //GET LIST OF SALVO LOCATIONS
     function getSalvoData(x) {
@@ -160,6 +168,7 @@ $(document).ready(function(){
             $.getJSON("http://localhost:8080/api/game_view/" + x, function (bigData){
 
             var salvoData = bigData;
+            var hitsOnYourOpponent = salvoData.hitsOnYourOpponent;
 
                 if (salvoData.salvoes["0"]["0"].gamePlayer == x) {
 
@@ -175,9 +184,12 @@ $(document).ready(function(){
                             var eachSalvo = salvoData.salvoes["0"][i].locations[j];
                             var eachTurn = salvoData.salvoes["0"][i].turn;
 
-                            fillBackgroundColorOfSalvoGrid(eachSalvo, eachTurn);
+                            fillBackgroundColorOfSalvoGrid(eachSalvo, eachTurn, hitsOnYourOpponent);
                         }
+
                     }
+                    fillHitsOnOpponentTable(hitsOnYourOpponent);
+
                 } else {
 
                     var salvoLocations = salvoData.salvoes[1]["0"].locations;
@@ -191,9 +203,11 @@ $(document).ready(function(){
                            var eachSalvo = salvoData.salvoes[1][i].locations[j];
                            var eachTurn = salvoData.salvoes[1][i].turn;
 
-                           fillBackgroundColorOfSalvoGrid(eachSalvo, eachTurn);
+                           fillBackgroundColorOfSalvoGrid(eachSalvo, eachTurn, hitsOnYourOpponent);
                         }
                     }
+                    fillHitsOnOpponentTable(hitsOnYourOpponent);
+
                 }
 
             });
@@ -202,10 +216,11 @@ $(document).ready(function(){
     //ADD THE SHIPS TO LEFT GRID - is this correct? PRETTY SURE IT ADDS OPPOSITION SALVOES TO LEFT GRID
     function fillBackgroundColor(chloesSalvos) {
 
+            var yourShipsHaveBeenHitHere = [];
+
             if(!chloesSalvos){return;};
 
                  for(var i = 0; i < chloesSalvos.length;i++){
-
                       for(var x = 0; x < chloesSalvos[i].locations.length; x++){
 
                           var chloeEachSalvo = chloesSalvos[i].locations[x];
@@ -214,17 +229,26 @@ $(document).ready(function(){
                               if($("#" + chloeEachSalvo).hasClass("blue")){
 
                                $("#" + chloeEachSalvo).addClass("red");
-                               $('#' + chloeEachSalvo).text("u got hit");
+                               $('#' + chloeEachSalvo).text("hit");
+
+                               yourShipsHaveBeenHitHere.push(chloeEachSalvo);
+
                                }else{
-                               $("#" + chloeEachSalvo).addClass("green");
-                               $('#' + chloeEachSalvo).text("they missed");
+                                    $("#" + chloeEachSalvo).addClass("green");
+                                    $('#' + chloeEachSalvo).text("they miss");
+                               }
+                              //THIS IF -- CALL hasPlayerOneBeenHit() ON LAST ITERATION OF ABOVE LOOPS
+                              if(i + 1 == chloesSalvos.length && x + 1 == chloesSalvos[i].locations.length){
+
+                                    //CALL FUNCTION TO CREATE JSON OBJECT THAT RECORDS IF LEFT GRID HAS HITS
+                                    var turnyNumber = chloesSalvos.length;
                               }
                       }
                  }
       };
 
     //FUNCTION TO ADD THE GAMEPLAYER INFO
-   /* function addGamePlayerInfo(x, gpData) {
+    function addGamePlayerInfo(x, gpData) {
 
           var gameInfoDiv = $("#whoIsPlayingNViewing");
           var gpData = gpData.gamePlayers;
@@ -237,56 +261,36 @@ $(document).ready(function(){
         if(gpData.length == 1){
 
             var playerNameOne = gpData[0].player;
-            playerBoxOne.append(playerNameOne);
+            playerBoxOne.append(playerNameOne + "(YOU)");
             gameInfoDiv.append(playerBoxOne);
 
 
         }else{
 
-console.log(gpData);
-
-        var playerNameOne = gpData[0].player;
+                  var playerNameOne = gpData[0].player;
                   playerBoxOne.append(playerNameOne);
                   var playerNameTwo = gpData[1].player;
-
                   playerBoxTwo.append(playerNameTwo);
 
-                  if (gpData[x - 1].gamePlayer_id % 2 != 0) {
-
-                      playerBoxOne.append("(YOU)");
-                  }
-
-                  if (gpData[x - 1].gamePlayer_id % 2 == 0) {
-
-                      playerBoxTwo.append("(YOU)");
-                  }
                   gameInfoDiv.append(playerBoxOne);
                   gameInfoDiv.append(playerBoxTwo);
         }
-      };*/
+      };
 
     function placeFirstRoundOfSalvoes(gpId, theData){
 
             //WORKING OUT TURN NUMBER FOR BOTH PLAYERS
-
             var theTurnNumber = 1;
 
             for(var z = 0; z < theData.salvoes["0"].length; z++){
 
                 if(theData.salvoes["0"][z].gamePlayer == gpId){
-
                     var theTurnNumber = theData.salvoes["0"].length + 1;
 
-
                 }else{
-
                     var theTurnNumber = theData.salvoes["1"].length + 1;
-
                 }
             }
-
-
-
             //END OF WORKING OUT TURN NUMBER FOR BOTH PLAYERS
 
             var firstRoundOfSalvoes = [];
@@ -322,18 +326,74 @@ console.log(gpData);
 
                                         alert("I think your salvoes have been saved");
                                         location.reload();
-
                                     },
                                     error: function(){
                                         alert("ERROR");
                                     }
                                 })
-                            }
+                     }
             });
-
         //CALL FUNCTION TO FILL SALVO GRID HERE
         getSalvoData(gpId);
     };
+
+
+    function fillHitsOnOpponentTable(hitsOnYourOpponent){
+
+            //THE LENGTH OF THESE ARRAYS WILL TELL YOU HOW MANY HITS THERE HAVE BEEN ON THIS SHIP
+            var carrierArray = [];
+            var battleshipArray = [];
+            var patrolBoatArray = [];
+            var submarineArray = [];
+            var destroyerArray = [];
+
+
+
+           for(var x = 0; x < hitsOnYourOpponent.length; x++){
+
+                var shipType = hitsOnYourOpponent[x].shipType;
+
+                switch(shipType){
+                    case "carrier":
+                        carrierArray.push("carrier");
+                        break;
+                    case "battleship":
+                        battleshipArray.push("battleship");
+                        break;
+                    case "submarine":
+                        submarineArray.push("submarine");
+                        break;
+                    case "destroyer":
+                        destroyerArray.push("destroyer");
+                        break;
+                    case "patrolboat":
+                        patrolBoatArray.push("patrolBoat");
+                        break;
+                }
+           }
+
+
+          //FILL THE CARRIER SQUARES
+          for(var x = 1; x < carrierArray.length + 1; x++){
+              $("#car" + x).css("background-color", "red")
+          }
+          //FILL THE BATTLESHIP SQUARES
+          for(var x = 1; x < battleshipArray.length + 1; x++){
+              $("#bat" + x).css("background-color", "red")
+          }
+          //FILL THE SUBMARINE SQUARES
+          for(var x = 1; x < submarineArray.length + 1; x++){
+              $("#sub" + x).css("background-color", "red")
+          }
+          //FILL THE DESTROYER SQUARES
+          for(var x = 1; x < destroyerArray.length + 1; x++){
+              $("#des" + x).css("background-color", "red")
+          }
+          //FILL THE PATROL BOAT SQUARES
+          for(var x = 1; x < patrolBoatArray.length + 1; x++){
+              $("#pat" + x).css("background-color", "red")
+          }
+    }
 
 
 

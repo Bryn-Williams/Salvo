@@ -6,8 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Array;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/api")
@@ -34,11 +37,11 @@ public class SalvoController {
 
         dto.put("games", gameRepo.findAll().stream()
                 .map(eachGame -> getGameInfo(eachGame))
-                .collect(Collectors.toList()));
+                .collect(toList()));
 
         dto.put("listOfPlayers", playerRepo.findAll().stream()
                .map(eachPlayer -> getPlayer(eachPlayer))
-               .collect(Collectors.toList()));
+               .collect(toList()));
 
        return dto;
     }
@@ -84,7 +87,7 @@ public class SalvoController {
         gameInfo.put("created", game.getDate());
         gameInfo.put("gamePlayers", game.getGamePlayers().stream()
                 .map(eachGP -> returnIDnP(eachGP))
-                .collect(Collectors.toList()));
+                .collect(toList()));
 
         return gameInfo;
     }
@@ -134,15 +137,17 @@ public class SalvoController {
         dto4.put("created", currentGame.getDate());
         dto4.put("gamePlayers", currentGame.getGamePlayers().stream()
                 .map(eachGP -> getIdAndPlayer(eachGP))
-                .collect(Collectors.toList()));
+                .collect(toList()));
 
         dto4.put("ships", currentGamePlayer.getMyships().stream()
                 .map(eachShip -> getTypeAndLocation(eachShip))
-                .collect(Collectors.toList()));
+                .collect(toList()));
 
         dto4.put("salvoes", currentGame.getGamePlayers().stream()
                 .map(eachGamePlayer -> getSalvoes(eachGamePlayer))
-                .collect(Collectors.toList()));
+                .collect(toList()));
+
+        dto4.put("hitsOnYourOpponent", getHitsOnOpponent(currentGame, authentication).stream().collect(toList()));
 
         if(currentGamePlayer.getPlayer().getId() == theLoggedinPlayer){
 
@@ -194,6 +199,7 @@ public class SalvoController {
             themap.put("turn", salvoe.getTurnNumber());
             themap.put("locations", salvoe.getSalvoLocation());
             themap.put("gamePlayer", salvoe.getGamePlayers().getId());
+            themap.put("newHits", "hereWEADDNEWHITS");
             dto999.add(themap);
         }
 
@@ -207,16 +213,14 @@ public class SalvoController {
 
         listofgames.put("GamesOfLoggedInPlayer", theLoggedinPlayer.getGamePlayers().stream()
                 .map(gamePlayerrr -> gamePlayerrr.getId())
-                .collect(Collectors.toList()));
+                .collect(toList()));
 
         return listofgames;
     }
 
-
     public Long getloggedPlayer(Authentication authentication){
 
         Player theloggedinplayer = playerRepo.findByUserName(authentication.getName());
-        //Player theloggedinplayer = thisPlayerId.get(0);
 
         Long person = theloggedinplayer.getId();
 
@@ -369,9 +373,14 @@ public class SalvoController {
         }
 
         //A Forbidden response should be sent if the user already has submitted a salvo for the turn listed.
+        for(Salvo eachSalvo: salvo) {
 
-        //currentGamePlayer.addSalvo(salvo);
-        //salvoRepo.save(salvo);
+            int currentTurnNumber = eachSalvo.getTurnNumber();
+
+            if (currentGamePlayer.getMysalvoes().size() + 1 != currentTurnNumber) {
+                return new ResponseEntity<>(makeMap("error", "ONLY ONE ROUND OF SALVOES PER TURN"), HttpStatus.UNAUTHORIZED);
+            }
+        }
 
         for(Salvo currentSalvoPosition: salvo){
 
@@ -380,9 +389,154 @@ public class SalvoController {
         }
 
 
-
         return new ResponseEntity<>(makeMap("YAY", "YOUR SALVOES HAVE BEEN PLACED"), HttpStatus.CREATED);
     }
 
 
-}
+    //METHOD TO GET LIST OF HITS ON OPPONENT & ADD TO GAME_VIEW API
+    public List<Map<String,Object>> getHitsOnOpponent(Game currentGame, Authentication authentication) {
+
+        Player loggedInPlayer = playerRepo.findByUserName(authentication.getName());
+
+        Set<GamePlayer> theGamePlayers = currentGame.getGamePlayers();
+
+        if (theGamePlayers.size() == 1) {
+
+            List<Map<String, Object>> nothingToReturn = new ArrayList<>();
+            //nothingToReturn.add("NADA");
+            return nothingToReturn;
+        }
+
+
+        GamePlayer opponentGP = null;
+        GamePlayer currentGP = null;
+
+        for (GamePlayer eachGp : theGamePlayers) {
+
+            if (eachGp.getPlayer().getUserName() != loggedInPlayer.getUserName()) {
+                opponentGP = eachGp;
+            }
+            if (eachGp.getPlayer().getUserName() == loggedInPlayer.getUserName()) {
+                currentGP = eachGp;
+            }
+        }
+
+        Set<Ship> opponentGPShips = opponentGP.getMyships();
+        Set<Salvo> currentGpSalvoes = currentGP.getMysalvoes();
+
+        if (currentGpSalvoes.size() == 0) {
+            List<Map<String, Object>> nothingToReturn = new ArrayList<>();
+            //nothingToReturn.add("NADA");
+            return nothingToReturn;
+        }
+
+
+        //CREATE LISTS OF SHIP LOCATIONS AND SALVO LOCATIONS
+        List<Map<String, List<String>>> allshipLocations = new ArrayList<>();
+        List<List<String>> allSalvoLocations = new ArrayList<>();
+
+
+        for (Ship shipper : opponentGPShips) {
+
+            Map<String, List<String>> shipAndType = new LinkedHashMap<>();
+
+            List<String> listOfOneShip = new ArrayList<>();
+
+            String theShip = shipper.getShipType();
+            listOfOneShip.add(theShip);
+
+            shipAndType.put("typeOfShip", listOfOneShip);
+            shipAndType.put("locationy", shipper.getShipLocation());
+
+            allshipLocations.add(shipAndType);
+        }
+
+        //GET THE SALVOE LOCATIONS
+        allSalvoLocations = currentGpSalvoes.stream()
+                .map(salvoy -> salvoy.getSalvoLocation())
+                .collect(toList());
+
+
+        //COMPARE THE TWO LISTS -- ADD ANY MATCHES TO LIST OF HITS ON OPPONENT!!
+        List<Map<String, Object>> listOfHitsOnOpponent = new ArrayList<>();
+
+
+        for (Map<String, List<String>> shipList : allshipLocations) {
+
+            List<String> theType = shipList.get("typeOfShip");
+            String theTypee = theType.get(0);
+
+            List<String> theLoc = shipList.get("locationy");
+
+            for(String shippyLocation : theLoc) {
+
+                //START LOOPING THROUGH THE SALVOES
+                for (List<String> salvolist : allSalvoLocations) {
+                    for (String salvolocation : salvolist) {
+
+                        salvolocation = salvolocation.substring(0, 2);
+
+
+                        if (salvolocation.equals(shippyLocation)) {
+                            //CREATE A MAP
+
+                            Map<String, Object> hitAndShip = new LinkedHashMap<>();
+                            hitAndShip.put("hitLocation", shippyLocation);
+                            hitAndShip.put("shipType", theTypee);
+
+                            //INSTEAD OF SHIP SIZE YOU NEED TO ADD SHIP TYPE!!
+
+                            listOfHitsOnOpponent.add(hitAndShip);
+
+                        }
+                    }
+                }
+            }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     /*       for(Map<String, Object> shiplist : allshipLocations){
+                for(String shippylocation : shiplist){
+
+                    for(List<String> salvolist : allSalvoLocations){
+                        for(String salvolocation : salvolist){
+
+                            salvolocation = salvolocation.substring(0,2);
+
+                            if(salvolocation.equals(shippylocation)){
+                                //CREATE A MAP
+
+                                Map<String,Object> hitAndShip = new LinkedHashMap<>();
+                                hitAndShip.put("hitLocation", shippylocation);
+                                hitAndShip.put("shipSize", shiplist.size());
+
+                                //INSTEAD OF SHIP SIZE YOU NEED TO ADD SHIP TYPE!!
+
+                                listOfHitsOnOpponent.add(hitAndShip);
+
+                            }
+                        }
+                    }
+                }
+            }*/
+
+            return listOfHitsOnOpponent;
+        } ;
+
+
+    }
+

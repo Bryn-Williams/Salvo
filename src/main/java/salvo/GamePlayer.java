@@ -59,7 +59,6 @@ public class GamePlayer {
         return mysalvoes;
     }
 
-
     //ADD SHIP(S) TO EMPTY INSTANCE VARIABLE ABOVE
     public void addShip(Ship ship){
 

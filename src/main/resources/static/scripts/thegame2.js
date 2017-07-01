@@ -71,7 +71,6 @@ $(document).ready(function () {
         }
     }
 
-
     function logInFunction(){
 
        var userNameValue = $("#userId").val();
@@ -507,7 +506,6 @@ $(document).ready(function () {
 
     function sendFleetToAjaxFunction(fleet){
 
-
             if(fleet.length != 5){
                 return;
             }
@@ -515,17 +513,6 @@ $(document).ready(function () {
              //$GET TO GET GP ID
              $.get("api/games", function(data){
 
-    /*
-                //IF YOU CREATE A GAME BELOW IS THE GAMEPLAYER ID
-
-
-                var lastGameIndex = data.games.length - 1;
-                console.log(data.games[lastGameIndex]);
-
-
-                var gamePlayerId = data.games[lastGameIndex].gamePlayers["0"].id;
-                //IF YOU JOIN A GAME BELOW IS THE GPID
-                */
                 //START OF SHIT TO GET GPID
                 var allgpids = [];
 
@@ -547,9 +534,6 @@ $(document).ready(function () {
 
                 console.log(allgpids);
 
-
-                //console.log(fleet);
-
                 //SEND THE FLEET(ARRAY) TO THE DB
                 $.ajax({
 
@@ -561,8 +545,6 @@ $(document).ready(function () {
 
                         alert("SUCCESS!");
                         window.open("http://localhost:8080/games.html?gp=" + gamePlayerId ,"_self");
-                        //placeFirstRoundOfSalvoes(gamePlayerId);
-
                     },
                     error: function(){
                         alert("ERROR");
