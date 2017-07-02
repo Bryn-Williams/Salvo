@@ -41,7 +41,7 @@ $(document).ready(function(){
         var theNumbers = [" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
         var theDiv = $("#divForGrid"); //GETTING THE DIV
 
-        theDiv.append("<h2>Your Crew!</h2>");
+        theDiv.append("<div class='flex'><h2 class='blackFont'>Your Crew!</h2></div>");
 
         for (var i = 0; i < 11; i++) {
 
@@ -77,7 +77,7 @@ $(document).ready(function(){
         var theNumbers = [" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
         var theDiv = $("#divForSalvoes"); //GETTING THE DIV
-        theDiv.append("<h2>Your Shots!</h2>");
+        theDiv.append("<div class='flex'><h2 class='blackFont'>Your Shots!</h2></div>");
 
         for (var i = 0; i < 11; i++) {
 
@@ -159,6 +159,7 @@ $(document).ready(function(){
                      //CHANGE COLOR OF SQUARE IF U HIT YOUR OPPONENT!
                      $("#" + currentLocation + currentLocation).css("background-color", "red");
                      $("#" + currentLocation + currentLocation).html("hit");
+
                 }
      };
 
@@ -176,6 +177,7 @@ $(document).ready(function(){
                     var numberOfSalvoes = salvoData.salvoes["0"].length;
 
                     var chloesSalvos = salvoData.salvoes["1"];
+                    var jacksSalvos = salvoData.salvoes["0"];
 
                     for (var i = 0; i < numberOfSalvoes; i++) {
 
@@ -188,13 +190,15 @@ $(document).ready(function(){
                         }
 
                     }
-                    fillHitsOnOpponentTable(hitsOnYourOpponent);
+                    fillHitsOnOpponentTable(hitsOnYourOpponent, salvoData, x);
 
                 } else {
 
                     var salvoLocations = salvoData.salvoes[1]["0"].locations;
                     var numberOfSalvoes = salvoData.salvoes[1].length;
                     var chloesSalvos = salvoData.salvoes["0"];
+                    var jacksSalvos = salvoData.salvoes["1"];
+
 
                     for (var i = 0; i < numberOfSalvoes; i++) {
 
@@ -206,8 +210,8 @@ $(document).ready(function(){
                            fillBackgroundColorOfSalvoGrid(eachSalvo, eachTurn, hitsOnYourOpponent);
                         }
                     }
-                    fillHitsOnOpponentTable(hitsOnYourOpponent);
 
+                    fillHitsOnOpponentTable(hitsOnYourOpponent, salvoData, x);
                 }
 
             });
@@ -261,7 +265,7 @@ $(document).ready(function(){
         if(gpData.length == 1){
 
             var playerNameOne = gpData[0].player;
-            playerBoxOne.append(playerNameOne + "(YOU)");
+            playerBoxOne.append(playerNameOne);
             gameInfoDiv.append(playerBoxOne);
 
 
@@ -338,7 +342,7 @@ $(document).ready(function(){
     };
 
 
-    function fillHitsOnOpponentTable(hitsOnYourOpponent){
+    function fillHitsOnOpponentTable(hitsOnYourOpponent, salvoData, loggedInGP){
 
             //THE LENGTH OF THESE ARRAYS WILL TELL YOU HOW MANY HITS THERE HAVE BEEN ON THIS SHIP
             var carrierArray = [];
@@ -346,8 +350,6 @@ $(document).ready(function(){
             var patrolBoatArray = [];
             var submarineArray = [];
             var destroyerArray = [];
-
-
 
            for(var x = 0; x < hitsOnYourOpponent.length; x++){
 
@@ -372,7 +374,6 @@ $(document).ready(function(){
                 }
            }
 
-
           //FILL THE CARRIER SQUARES
           for(var x = 1; x < carrierArray.length + 1; x++){
               $("#car" + x).css("background-color", "red")
@@ -393,8 +394,62 @@ $(document).ready(function(){
           for(var x = 1; x < patrolBoatArray.length + 1; x++){
               $("#pat" + x).css("background-color", "red")
           }
+
+          changeTurnFunction(salvoData, loggedInGP);
     }
 
 
 
+    function changeTurnFunction(salvoData, loggedInGP){
+
+        console.log(loggedInGP);
+        console.log(salvoData.salvoes);
+
+
+        for(var z = 0; z < salvoData.salvoes.length; z++){
+
+                if(salvoData.salvoes[z]["0"].gamePlayer == loggedInGP){
+
+                    var loggedInPlayerSalvoes = salvoData.salvoes["1"];
+                    var oppositionPlayerSalvoes = salvoData.salvoes["0"];
+                }else{
+
+                    var loggedInPlayerSalvoes = salvoData.salvoes["0"];
+                    var oppositionPlayerSalvoes = salvoData.salvoes["1"];
+
+                }
+        }
+
+        //BELOW YOU HAVE THE VARS FOR LOGGED IN AND OPPOSITION!
+        console.log(loggedInPlayerSalvoes);
+        console.log(oppositionPlayerSalvoes);
+
+        //IF THERE IS ONLY ONE PLAYER SO FAR, HIDE EVERYTHING
+        if(salvoData.salvoes.length == 1){
+
+            $("#gameStatusBox").html("<h2 class='center'>WAITING FOR PLAYER TO JOIN YOUR GAME</h2>");
+            $("#divForHits").hide();
+            $(".salvotiles").off('click');
+
+        }//CODE BELOW FOR BOTH PLAYERS TAKING TURNS
+
+             if(loggedInPlayerSalvoes.length == oppositionPlayerSalvoes.length){
+             //this means its the turn of gp with lower gpid
+                    if(loggedInGP > oppositionPlayerSalvoes["0"].gamePlayer){
+                        $(".salvotiles").off('click');
+                        $("#gameStatusBox").html("<h2 class='center'>WAIT FOR OPPONENT TO FIRE!</h2>");
+
+                    }else{
+                        $(".salvotiles").on('click');
+                    }
+             }else{
+                    if(loggedInGP > oppositionPlayerSalvoes["0"].gamePlayer){
+                        $(".salvotiles").on('click');
+
+                    }else{
+                        $(".salvotiles").off('click');
+                        $("#gameStatusBox").html("<h2 class='center'>WAIT FOR OPPONENT TO FIRE!</h2>");
+                    }
+             }
+    };
 

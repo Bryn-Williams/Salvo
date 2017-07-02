@@ -12,7 +12,7 @@
 </div>
 
 <div id="createGameButDiv" class="center">
-    <button onclick="createGameFunction()">CREATE NEW GAME!</button>
+    <button id="createGameBut" onclick="createGameFunction()">CREATE NEW GAME!</button>
 </div>
 
 <h1 id="theLoggedInUserSpace" class="center"></h1>
@@ -26,6 +26,7 @@
     </div>
 
     <div id="rightBox" class="centerColumn">
+        <div id="hideMe" class="centerColumn">
         <h2>LOGIN</h2>
         <div id="theLoginSpace" class="center">
             <form>
@@ -39,13 +40,30 @@
             </form>
         </div>
     </div>
-</div>
+        <div class="flex" id="currentGamesBox">
+            <div>
+                <h2>CURRENT GAMES</h2>
+            </div>
+            <div id="gameListDiv">
+                <ol id="theList">
+                </ol>
+            </div>
+        </div>
 
 
-<div id="gameListDiv">
-    <ol id="theList">
-    </ol>
+    </div>
+
 </div>
+
+<!--<div class="flex" id="currentGamesBox">
+    <div>
+        <h2>CURRENT GAMES</h2>
+    </div>
+    <div id="gameListDiv">
+        <ol id="theList">
+        </ol>
+    </div>
+</div>-->
 
 
 <div id="footerBar">

@@ -88,7 +88,7 @@ $(document).ready(function () {
             //alert("Log in successful!")
 
             $("#theLoggedInUserSpace").html(userNameValue + " is logged in");
-            $("#rightBox").hide();
+            $("#hideMe").hide();
 
         }).fail(function(){
 
@@ -144,7 +144,9 @@ $(document).ready(function () {
 
             $.each(theData, function(key,value){
 
-                var newListItem = $("<li>" + "Game no. " + value.gameId + "," + " Created: "+ value.created + "," + "</li>");
+                //var newListItem = $("<li>" + "Game no. " + value.gameId + "," + "</li>");
+                var newListItem = $("<li></li>");
+
 
                 $.each(value.gamePlayers, function(key2,value2){
 

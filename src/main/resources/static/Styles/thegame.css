@@ -8,7 +8,7 @@ font-family: Lucida Console;
 
 html {
 
-    background-image: url("../Styles/wallpaper1.jpg");
+    background-image: url("../Styles/wallpaper2.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     margin: 0px;
@@ -17,23 +17,30 @@ html {
 
 
 h1, h2 {
-    color: black;
+    color: white;
     font-family: "Bookman Old Style";
 }
 
 h1 {
 font-size: 50px;
 margin-bottom: 0px;
+    color: darkgoldenrod;
+
 }
 
 table {
     border: 1px solid black;
     border-radius: 10px;
     padding: 20px;
+/*
+    background-color: rgba(255, 255, 255, 0.63);
+*/
+
 }
 
 th, td {
     border-bottom: 1px solid #ddd;
+    min-height: 50px;
 }
 
 tr:hover {
@@ -48,17 +55,17 @@ tr:hover {
     display: flex;
     -ms-flex-pack: distribute;
         justify-content: space-around;
-        align-items: center;
+        align-items: flex-start;
     flex-wrap: wrap;
+/*
+    background-color: rgba(255, 255, 255, 0.63);
+*/
 }
 
 tr{
     height: 40px;
 }
 
-td {
-    text-align: center;
-}
 
 th {
     min-width: 65px;
@@ -99,19 +106,19 @@ form {
 
 #logOutBut {
 
-    background-color: rgba(43, 172, 227, 0.67);
+    background-color: darkgoldenrod;
     height: 40px;
     margin-top: 100px;
     margin-bottom: 100px;
 }
 
 #scoreBoard {
-    background-color: rgba(255, 255, 255, 0.73);
+    background-color: rgba(255, 255, 255, 0.63);
     border-radius: 10px;
 }
 
 #theLoginSpace {
-    background-color: rgba(255, 255, 255, 0.73);
+    background-color: rgba(255, 255, 255, 0.63);
     border: 1px solid black;
 
     border-radius: 10px;
@@ -203,7 +210,7 @@ body {
     min-width: 100px;
     margin-bottom: 20px;
     margin-top: 20px;
-    background-color: rgba(43, 172, 227, 0.67);
+    background-color: darkgoldenrod;
     height: 40px;
 }
 
@@ -272,7 +279,7 @@ body {
 
  #hitsOnYouTable{
 
-    background-color: rgba(255, 255, 255, 0.33);
+    background-color: rgba(255, 255, 255, 0.63);
  }
 
 .hitTiles{
@@ -285,5 +292,72 @@ body {
 .flex {
 
     display: flex;
+    justify-content:center;
+}
 
+#whoIsPlayingNViewing {
+    display: flex;
+    justify-content: space-around;
+}
+
+#hitsTable{
+    margin-top: 40px;
+
+}
+
+#divForGrid, #divForSalvoes, #divForHits, #gameListDiv {
+
+    border-radius: 10px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.63);
+
+}
+
+#divForShipInfo {
+
+    min-width: 400px;
+}
+
+#placeShipsTable{
+        background-color: rgba(255, 255, 255, 0.63);
+        min-width: 400px;
+}
+
+#gameListDiv {
+    border: 1px solid black;
+    background-color: rgba(255, 255, 255, 0.63);
+    width: 450px;
+}
+
+#currentGamesBox{
+
+    flex-direction: column;
+    align-items: center;
+}
+
+li {
+    margin: 10px 0px 10px 0px;
+}
+
+.blackFont{
+    color:black;
+}
+
+
+.center {
+   display: flex;
+/*
+   justify-content: center;
+*/
+   align-items: center;
+}
+
+#hv {
+    text-align: center;
+}
+
+iframe{
+
+height: 40px;
+width: 40px;
 }

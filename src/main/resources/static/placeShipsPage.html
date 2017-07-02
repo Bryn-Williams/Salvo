@@ -30,33 +30,33 @@
     </div>
 
     <div id="divForShipInfo">
-        <table>
+        <table id="placeShipsTable">
             <tr>
                 <th>Ships</th>
                 <th>Length</th>
             </tr>
             <tr id="carrierRow">
                 <td><input id="carrier" type="radio" name="shiptype" value="carrier" onclick="isRadioBoxChecked('carrier', 5)">Aircraft Carrier</td>
-                <td>5</td>
+                <td class="center">5</td>
             </tr>
             <tr id="battleshipRow">
                 <td><input id="battleship" type="radio" name="shiptype" value="battleship" onclick="isRadioBoxChecked('battleship', 4)"> Battleship</td>
-                <td>4</td>
+                <td class="center">4</td>
             </tr>
             <tr id="submarineRow">
                 <td><input id="submarine" type="radio" name="shiptype" value="submarine" onclick="isRadioBoxChecked('submarine', 3)"> Submarine</td>
-                <td>3</td>
+                <td class="center">3</td>
             </tr>
             <tr id="destroyerRow">
                 <td><input id="destroyer" type="radio" name="shiptype" value="destroyer" onclick="isRadioBoxChecked('destroyer', 3)"> Destroyer</td>
-                <td>3</td>
+                <td class="center">3</td>
             </tr>
             <tr id="patrolboatRow">
                 <td><input id="patrolboat" type="radio" name="shiptype" value="PatrolBoat" onclick="isRadioBoxChecked('patrolboat', 2)"> Patrol Boat</td>
-                <td>2</td>
+                <td class="center">2</td>
             </tr>
             <tr>
-                <td colspan="2"><input id="horizontal" type="radio" name="horver" value="horizontal" onclick="changeToHoriz()">Horizontal <input id="vertical" type="radio" name="horver" value="vertical" checked onclick="changeToHoriz()">Vertical</td>
+                <td colspan="2" id="hv"><input id="horizontal" type="radio" name="horver" value="horizontal" onclick="changeToHoriz()">Horizontal <input id="vertical" type="radio" name="horver" value="vertical" checked onclick="changeToHoriz()">Vertical</td>
             </tr>
         </table>
     </div>
