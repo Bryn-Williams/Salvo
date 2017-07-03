@@ -28,6 +28,7 @@ public class GamePlayer {
     @OneToMany(mappedBy = "gamePlayers", fetch = FetchType.EAGER)
     private Set<Salvo> mysalvoes = new LinkedHashSet<>();
 
+
     //END OF INSTANCE VARIABLES
 
     //START OF METHOD CONSTRUCTOR
@@ -79,7 +80,6 @@ public class GamePlayer {
     }
 
 
-
     // ID GETTER AND SETTER
     public long getId() {
         return Id;
@@ -94,5 +94,14 @@ public class GamePlayer {
     public void setDate(Date date) {
         this.date = date;
     }
+
+ /*   //GETTER AND SETTER FOR HITS ON YOU
+    public Set<String> getHitsOnYou() {
+        return hitsOnYou;
+    }
+
+    public void setHitsOnYou(Set<String> hitsOnYou) {
+        this.hitsOnYou = hitsOnYou;
+    }*/
 
 }

@@ -149,6 +149,8 @@ public class SalvoController {
 
         dto4.put("hitsOnYourOpponent", getHitsOnOpponent(currentGame, authentication).stream().collect(toList()));
 
+
+
         if(currentGamePlayer.getPlayer().getId() == theLoggedinPlayer){
 
              return new ResponseEntity<>(dto4, HttpStatus.ACCEPTED);
@@ -392,6 +394,41 @@ public class SalvoController {
         return new ResponseEntity<>(makeMap("YAY", "YOUR SALVOES HAVE BEEN PLACED"), HttpStatus.CREATED);
     }
 
+  /*  //METHOD TO STORE HITS ON YOUR SHIPS
+    @RequestMapping(path = "/games/players/{gPId}/hitsOnYou", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> storeHitsOnYou(@PathVariable Long gPId, @RequestBody List<String> theHits, Authentication authentication){
+
+        GamePlayer currentGamePlayer = gamePlayerRepo.findOne(gPId);
+        Player theloggedinplayer = playerRepo.findByUserName(authentication.getName());
+
+        //there is no current user logged in
+        if(authentication == null){
+            return new ResponseEntity<>(makeMap("error", "YOU MUST SIGN IN TO JOIN"), HttpStatus.UNAUTHORIZED);
+        }
+
+        //there is no game player with the given ID
+        if(currentGamePlayer.getId() != gPId){
+            return new ResponseEntity<>(makeMap("error", "NO GAMEPLAYER WITH GIVEN ID"), HttpStatus.UNAUTHORIZED);
+        }
+
+        //the current user is not the game player the ID references
+        if(currentGamePlayer.getPlayer().getId() != theloggedinplayer.getId()){
+            return new ResponseEntity<>(makeMap("error", "NO GAMEPLAYER WITH GIVEN ID"), HttpStatus.UNAUTHORIZED);
+        }
+
+        for(String hits : theHits){
+
+            Set<String> hitsOnYouuu = new LinkedHashSet<>();
+            hitsOnYouuu.add(hits);
+
+            //currentGamePlayer.setHitsOnYou(hitsOnYouuu);
+            //gamePlayerRepo.save(currentGamePlayer);
+        }
+
+
+        return new ResponseEntity<>(makeMap("YAY", "YOUR HITS HAVE BEEN RECORDED"), HttpStatus.CREATED);
+    }*/
+
 
     //METHOD TO GET LIST OF HITS ON OPPONENT & ADD TO GAME_VIEW API
     public List<Map<String,Object>> getHitsOnOpponent(Game currentGame, Authentication authentication) {
@@ -487,6 +524,7 @@ public class SalvoController {
                             //INSTEAD OF SHIP SIZE YOU NEED TO ADD SHIP TYPE!!
 
                             listOfHitsOnOpponent.add(hitAndShip);
+
 
                         }
                     }

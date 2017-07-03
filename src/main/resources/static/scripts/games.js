@@ -41,7 +41,7 @@ $(document).ready(function(){
         var theNumbers = [" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
         var theDiv = $("#divForGrid"); //GETTING THE DIV
 
-        theDiv.append("<div class='flex'><h2 class='blackFont'>Your Crew!</h2></div>");
+        theDiv.append("<div class='flex'><h2 class='blackFont'>Your Fleet!</h2></div>");
 
         for (var i = 0; i < 11; i++) {
 
@@ -136,7 +136,7 @@ $(document).ready(function(){
                         var chloesSalvos = salvoData.salvoes["0"];
                      }
 
-                 fillBackgroundColor(chloesSalvos);//ADD CHLOE'S SALVOS TO JACKS GRID TO SEE IF JACK HAS BEEN HIT
+                 fillBackgroundColor(chloesSalvos, x);//ADD CHLOE'S SALVOS TO JACKS GRID TO SEE IF JACK HAS BEEN HIT
                  addGamePlayerInfo(x, salvoData);
              }
 
@@ -217,12 +217,14 @@ $(document).ready(function(){
             });
         };
 
-    //ADD THE SHIPS TO LEFT GRID - is this correct? PRETTY SURE IT ADDS OPPOSITION SALVOES TO LEFT GRID
-    function fillBackgroundColor(chloesSalvos) {
+    //ADDS OPPOSITION SALVOES TO LEFT GRID
+    function fillBackgroundColor(chloesSalvos, gpId) {
 
             var yourShipsHaveBeenHitHere = [];
 
-            if(!chloesSalvos){return;};
+            if(!chloesSalvos){
+                return;
+            };
 
                  for(var i = 0; i < chloesSalvos.length;i++){
                       for(var x = 0; x < chloesSalvos[i].locations.length; x++){
@@ -241,14 +243,33 @@ $(document).ready(function(){
                                     $("#" + chloeEachSalvo).addClass("green");
                                     $('#' + chloeEachSalvo).text("they miss");
                                }
-                              //THIS IF -- CALL hasPlayerOneBeenHit() ON LAST ITERATION OF ABOVE LOOPS
+                          /*    //THIS IF -- CALL hasPlayerOneBeenHit() ON LAST ITERATION OF ABOVE LOOPS
                               if(i + 1 == chloesSalvos.length && x + 1 == chloesSalvos[i].locations.length){
 
                                     //CALL FUNCTION TO CREATE JSON OBJECT THAT RECORDS IF LEFT GRID HAS HITS
                                     var turnyNumber = chloesSalvos.length;
-                              }
+                              }*/
                       }
                  }
+
+                 //console.log(yourShipsHaveBeenHitHere);
+                 //SEND AJAX TO BACKEND TO SAVE HITS ON YOUR SHIPS
+        /*        $.ajax({
+
+                    url: "api/games/players/" + gpId + "/hitsOnYou",
+                    type: "POST",
+                    contentType:"application/json",
+                    data: JSON.stringify(yourShipsHaveBeenHitHere),
+                    success: function(){
+
+                        alert("SUCCESS!");
+                    },
+                    error: function(){
+                        alert("ERROR");
+                    }
+                })*/
+
+
       };
 
     //FUNCTION TO ADD THE GAMEPLAYER INFO
@@ -399,13 +420,9 @@ $(document).ready(function(){
     }
 
 
-
     function changeTurnFunction(salvoData, loggedInGP){
 
-        console.log(loggedInGP);
-        console.log(salvoData.salvoes);
-
-
+        //FOR LOOP TO GET GAME PLAYERS
         for(var z = 0; z < salvoData.salvoes.length; z++){
 
                 if(salvoData.salvoes[z]["0"].gamePlayer == loggedInGP){
@@ -416,13 +433,12 @@ $(document).ready(function(){
 
                     var loggedInPlayerSalvoes = salvoData.salvoes["0"];
                     var oppositionPlayerSalvoes = salvoData.salvoes["1"];
-
                 }
         }
 
         //BELOW YOU HAVE THE VARS FOR LOGGED IN AND OPPOSITION!
-        console.log(loggedInPlayerSalvoes);
-        console.log(oppositionPlayerSalvoes);
+        //console.log(loggedInPlayerSalvoes);
+        //console.log(oppositionPlayerSalvoes);
 
         //IF THERE IS ONLY ONE PLAYER SO FAR, HIDE EVERYTHING
         if(salvoData.salvoes.length == 1){
@@ -430,6 +446,7 @@ $(document).ready(function(){
             $("#gameStatusBox").html("<h2 class='center'>WAITING FOR PLAYER TO JOIN YOUR GAME</h2>");
             $("#divForHits").hide();
             $(".salvotiles").off('click');
+            setInterval(function(){ location.reload()}, 10000);
 
         }//CODE BELOW FOR BOTH PLAYERS TAKING TURNS
 
@@ -438,6 +455,7 @@ $(document).ready(function(){
                     if(loggedInGP > oppositionPlayerSalvoes["0"].gamePlayer){
                         $(".salvotiles").off('click');
                         $("#gameStatusBox").html("<h2 class='center'>WAIT FOR OPPONENT TO FIRE!</h2>");
+                        setInterval(function(){ location.reload()}, 10000);
 
                     }else{
                         $(".salvotiles").on('click');
@@ -449,7 +467,74 @@ $(document).ready(function(){
                     }else{
                         $(".salvotiles").off('click');
                         $("#gameStatusBox").html("<h2 class='center'>WAIT FOR OPPONENT TO FIRE!</h2>");
+                        setInterval(function(){ location.reload()}, 10000);
                     }
              }
+
+        //CALL A FUNCTION TO CHECK IF ALL SHIPS HAVE BEEN HIT!
+        isGameOver(salvoData,loggedInPlayerSalvoes, oppositionPlayerSalvoes);
+
     };
 
+    function isGameOver(salvoData, loggedInPlayerSalvoes, oppositionPlayerSalvoes){
+
+        var hitsOnYouArray = [];
+
+             for(var i = 0; i < oppositionPlayerSalvoes.length;i++){
+                   for(var x = 0; x < oppositionPlayerSalvoes[i].locations.length; x++){
+
+                        var chloeEachSalvo = oppositionPlayerSalvoes[i].locations[x];
+                        chloeEachSalvo = chloeEachSalvo.slice(2);
+
+                        if($("#" + chloeEachSalvo).hasClass("blue")){
+                           hitsOnYouArray.push(chloeEachSalvo);
+                        }
+                   }
+             }
+
+        console.log(hitsOnYouArray);
+
+
+        //CHECK TO SEE IF THE NUMBER OF TURNS ARE THE SAME AND SOMEONE HAS HIT ALL 17 POSITIONS
+        if((loggedInPlayerSalvoes.length == oppositionPlayerSalvoes.length) && (salvoData.hitsOnYourOpponent.length == 17) && hitsOnYouArray.length != 17){
+            //YOU WIN!!!!!!!!!!!!!!
+            $("#gameStatusBox").empty();
+            $("#gameStatusBox").html("<h1 class='center bounceInLeft'>YOU SUNK THEIR BATTLESHIPS!</h1><br><h1 class='center'>YOU WIN!!!!</h1>");
+            $("#audioBox").html("<audio id='my_audio' src='../Styles/sunkBattleship.mp3'></audio>");
+            $("#my_audio").get(0).play();
+
+            return;
+        }
+
+        //CHECK TO SEE IF IT'S A DRAW
+        if((loggedInPlayerSalvoes.length == oppositionPlayerSalvoes.length) && (salvoData.hitsOnYourOpponent.length == 17) && hitsOnYouArray.length == 17){
+
+           $("#gameStatusBox").html("<h1 class='center animated bounceInLeft'>IT'S A DRAW</h1>");
+
+        }
+
+
+        //CHECK TO SEE IF THEY HAVE LOST!!
+        if((loggedInPlayerSalvoes.length == oppositionPlayerSalvoes.length) && (hitsOnYouArray.length == 17) && (salvoData.hitsOnYourOpponent.length < 17)){
+
+            $("#gameStatusBox").html("<h1 class='center animated bounceInLeft'>YOU LOSE!</h1>");
+            $("#audioBox").html("<audio id='my_audio' src='../Styles/Nelson.mp3'></audio>");
+            $("#my_audio").get(0).play();
+        }
+
+
+        //THIS IF MEANS YOU HAVE HIT ALL THEIR BATTLESHIPS BUT TURN NUMBERS ARENT EQUAL
+        if((salvoData.hitsOnYourOpponent.length == 17) && (loggedInPlayerSalvoes.length != oppositionPlayerSalvoes.length)){
+
+            $("#gameStatusBox").empty();
+            $("#gameStatusBox").html("<h1 class='center'>YOU SUNK THEIR BATTLESHIPS!</h1><br><h2 class='center'>PLEASE WAIT FOR OPPONENT TO FIRE THEIR LAST ROUND</h2><br><h2 class='center'>WILL YOU WIN OR DRAW??</h2>");
+            //$("#audioBox").html("<audio id='my_audio' src='../Styles/sunkBattleship.mp3'></audio>");
+            //$("#my_audio").get(0).play();
+
+            //NOW WE HAVE TO CHECK IF ITS A WIN OR A DRAW
+
+        }else{
+            return;
+        }
+
+    };

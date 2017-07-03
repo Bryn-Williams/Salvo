@@ -361,3 +361,25 @@ iframe{
 height: 40px;
 width: 40px;
 }
+
+/*#itsADraw{
+
+color: darkgoldenrod;
+    -webkit-animation-name: example; *//* Safari 4.0 - 8.0 *//*
+    -webkit-animation-duration: 4s; *//* Safari 4.0 - 8.0 *//*
+    animation-name: example;
+    animation-duration: 5s;
+    animation-iteration-count: 1;
+
+}
+
+*//* Safari 4.0 - 8.0 *//*
+@-webkit-keyframes example {
+    from {color: white;
+    transform: scale(1,1);
+    }
+    to {color: darkgoldenrod;
+    transform: scale(2,2);
+    }
+}*/
+
