@@ -26,6 +26,8 @@ public class SalvoController {
     private ShipRepository shipRepo;
     @Autowired
     private SalvoRepository salvoRepo;
+    @Autowired
+    private ScoreRepository scoreRepo;
 
 
    @RequestMapping("/games")
@@ -147,13 +149,13 @@ public class SalvoController {
                 .map(eachGamePlayer -> getSalvoes(eachGamePlayer))
                 .collect(toList()));
 
+        dto4.put("GameStatus", currentGamePlayer.getGameOutcome());
+
         dto4.put("hitsOnYourOpponent", getHitsOnOpponent(currentGame, authentication).stream().collect(toList()));
-
-
 
         if(currentGamePlayer.getPlayer().getId() == theLoggedinPlayer){
 
-             return new ResponseEntity<>(dto4, HttpStatus.ACCEPTED);
+             return new ResponseEntity<Map<String, Object>>(dto4, HttpStatus.ACCEPTED);
 
         }else{
 
@@ -273,8 +275,37 @@ public class SalvoController {
 
             return new ResponseEntity<>(makeMap("newGamePlayerId", newGamePlayer.getId()), HttpStatus.ACCEPTED);
         }
-
     }
+
+
+
+
+    //METHOD TO SET SCORES
+    @RequestMapping(path = "/scores/{gpid}/gameScore", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> setScores(@PathVariable Long gpid, @RequestBody Double xxx, Authentication authentication){
+
+        if(authentication == null){
+
+            return new ResponseEntity<>(makeMap("error", "YOU MUST BE SIGNED IN TO SET THE SCORES") , HttpStatus.UNAUTHORIZED);
+        }
+
+        else{
+
+            Player theloggedinplayer = playerRepo.findByUserName(authentication.getName());
+
+            GamePlayer currentGp = gamePlayerRepo.findOne(gpid);
+
+            Score scoreOne = new Score(currentGp, xxx);
+            scoreRepo.save(scoreOne);
+
+            return new ResponseEntity<>(makeMap("Your score has been", "saved!"), HttpStatus.ACCEPTED);
+        }
+    }
+
+
+
+
+
 
 
     //METHOD TO JOIN GAME
@@ -284,8 +315,6 @@ public class SalvoController {
         Game currentGame = gameRepo.findOne(xx);
 
         Player theloggedinplayer = playerRepo.findByUserName(authentication.getName());
-        //Player theloggedinplayer = thisPlayerId.get(0);
-
 
         //IF NOBODY HAS SIGNED IN,
         if (authentication == null) {
@@ -394,42 +423,6 @@ public class SalvoController {
         return new ResponseEntity<>(makeMap("YAY", "YOUR SALVOES HAVE BEEN PLACED"), HttpStatus.CREATED);
     }
 
-  /*  //METHOD TO STORE HITS ON YOUR SHIPS
-    @RequestMapping(path = "/games/players/{gPId}/hitsOnYou", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> storeHitsOnYou(@PathVariable Long gPId, @RequestBody List<String> theHits, Authentication authentication){
-
-        GamePlayer currentGamePlayer = gamePlayerRepo.findOne(gPId);
-        Player theloggedinplayer = playerRepo.findByUserName(authentication.getName());
-
-        //there is no current user logged in
-        if(authentication == null){
-            return new ResponseEntity<>(makeMap("error", "YOU MUST SIGN IN TO JOIN"), HttpStatus.UNAUTHORIZED);
-        }
-
-        //there is no game player with the given ID
-        if(currentGamePlayer.getId() != gPId){
-            return new ResponseEntity<>(makeMap("error", "NO GAMEPLAYER WITH GIVEN ID"), HttpStatus.UNAUTHORIZED);
-        }
-
-        //the current user is not the game player the ID references
-        if(currentGamePlayer.getPlayer().getId() != theloggedinplayer.getId()){
-            return new ResponseEntity<>(makeMap("error", "NO GAMEPLAYER WITH GIVEN ID"), HttpStatus.UNAUTHORIZED);
-        }
-
-        for(String hits : theHits){
-
-            Set<String> hitsOnYouuu = new LinkedHashSet<>();
-            hitsOnYouuu.add(hits);
-
-            //currentGamePlayer.setHitsOnYou(hitsOnYouuu);
-            //gamePlayerRepo.save(currentGamePlayer);
-        }
-
-
-        return new ResponseEntity<>(makeMap("YAY", "YOUR HITS HAVE BEEN RECORDED"), HttpStatus.CREATED);
-    }*/
-
-
     //METHOD TO GET LIST OF HITS ON OPPONENT & ADD TO GAME_VIEW API
     public List<Map<String,Object>> getHitsOnOpponent(Game currentGame, Authentication authentication) {
 
@@ -532,49 +525,22 @@ public class SalvoController {
             }
             }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-     /*       for(Map<String, Object> shiplist : allshipLocations){
-                for(String shippylocation : shiplist){
-
-                    for(List<String> salvolist : allSalvoLocations){
-                        for(String salvolocation : salvolist){
-
-                            salvolocation = salvolocation.substring(0,2);
-
-                            if(salvolocation.equals(shippylocation)){
-                                //CREATE A MAP
-
-                                Map<String,Object> hitAndShip = new LinkedHashMap<>();
-                                hitAndShip.put("hitLocation", shippylocation);
-                                hitAndShip.put("shipSize", shiplist.size());
-
-                                //INSTEAD OF SHIP SIZE YOU NEED TO ADD SHIP TYPE!!
-
-                                listOfHitsOnOpponent.add(hitAndShip);
-
-                            }
-                        }
-                    }
-                }
-            }*/
-
             return listOfHitsOnOpponent;
         } ;
 
+    //METHOD TO REGISTER WHETHER A GAMEPLAYER HAS WON, DRAWN OR LOST
+    @RequestMapping(path = "/games/players/{gpId}/winLoseDraw", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> didYouWinLoseOrDraw(@PathVariable Long gpId, @RequestBody String wld, Authentication authentication){
+
+        GamePlayer currentGamePlayer = gamePlayerRepo.findOne(gpId);
+
+        currentGamePlayer.setGameOutcome(wld);
+
+        gamePlayerRepo.save(currentGamePlayer);
+
+        return new ResponseEntity<>(makeMap("YAY", "YOUR GAME STATUS HAS BEEN SAVED"), HttpStatus.CREATED);
+
+    };
 
     }
 

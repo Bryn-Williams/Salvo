@@ -14,6 +14,8 @@ public class GamePlayer {
     private long Id;
     private Date date = new Date();
 
+    private String gameOutcome = "";
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="game_id")
     private Game game;
@@ -95,13 +97,15 @@ public class GamePlayer {
         this.date = date;
     }
 
- /*   //GETTER AND SETTER FOR HITS ON YOU
-    public Set<String> getHitsOnYou() {
-        return hitsOnYou;
-    }
+  //GETTER AND SETTER FOR GAMEOUTCOME
+      public String getGameOutcome() {
+          return gameOutcome;
+      }
 
-    public void setHitsOnYou(Set<String> hitsOnYou) {
-        this.hitsOnYou = hitsOnYou;
-    }*/
+        public void setGameOutcome(String gameOutcome) {
+            this.gameOutcome = gameOutcome;
+        }
+
+
 
 }
