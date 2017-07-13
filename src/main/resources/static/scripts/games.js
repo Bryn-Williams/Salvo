@@ -150,18 +150,20 @@ $(document).ready(function(){
                 //console.log(gridLocation);
 
                 $("#" + gridLocation).css("background-color", "green");
+                //$('#' + gridLocation).text("X");
 
                 //ADD TURN NUMBER TO SHOTS FIRED
                 var turnNumber = eachTurn;
-                $("#" + gridLocation).html(turnNumber);
+                $("#" + gridLocation).html("X");
 
                 for(var x = 0; x < hitsOnYourOpponent.length; x++){
 
                     var currentLocation = hitsOnYourOpponent[x].hitLocation;
 
                      //CHANGE COLOR OF SQUARE IF U HIT YOUR OPPONENT!
-                     $("#" + currentLocation + currentLocation).css("background-color", "red");
-                     $("#" + currentLocation + currentLocation).html("hit");
+                     //$("#" + currentLocation + currentLocation).css("background-color", "red");
+                     //$("#" + currentLocation + currentLocation).html("hit");
+                     $("#" + currentLocation + currentLocation).addClass("firePic");
 
                 }
      };
@@ -176,7 +178,7 @@ $(document).ready(function(){
 
                 //console.log(salvoData);
 
-                if(salvoData.salvoes["0"].length == 0 && salvoData.gamePlayers.length == 2){
+                if(salvoData.salvoes["0"].length == 0 && salvoData.gamePlayers.length == 2 && x <= salvoData.salvoes["1"]["0"].gamePlayer ){
 
                    var salvoLocations = salvoData.salvoes[1]["0"].locations;
                     var numberOfSalvoes = salvoData.salvoes[1].length;
@@ -194,7 +196,7 @@ $(document).ready(function(){
                            fillBackgroundColorOfSalvoGrid(eachSalvo, eachTurn, hitsOnYourOpponent);
                         }
                     }
-
+console.log("11");
                     fillHitsOnOpponentTable(hitsOnYourOpponent, salvoData, x);
                     return;
                 }
@@ -214,7 +216,7 @@ $(document).ready(function(){
 
                             var eachSalvo = salvoData.salvoes["0"][i].locations[j];
                             var eachTurn = salvoData.salvoes["0"][i].turn;
-
+//console.log("22");
                             fillBackgroundColorOfSalvoGrid(eachSalvo, eachTurn, hitsOnYourOpponent);
                         }
 
@@ -234,7 +236,7 @@ $(document).ready(function(){
 
                            var eachSalvo = salvoData.salvoes[1][i].locations[j];
                            var eachTurn = salvoData.salvoes[1][i].turn;
-
+console.log("33");
                            fillBackgroundColorOfSalvoGrid(eachSalvo, eachTurn, hitsOnYourOpponent);
                         }
                     }
@@ -261,14 +263,14 @@ $(document).ready(function(){
 
                               if($("#" + chloeEachSalvo).hasClass("blue")){
 
-                               $("#" + chloeEachSalvo).addClass("red");
-                               $('#' + chloeEachSalvo).text("hit");
+                               $("#" + chloeEachSalvo).removeClass("blue");
+                               $("#" + chloeEachSalvo).addClass("firePic");
 
                                yourShipsHaveBeenHitHere.push(chloeEachSalvo);
 
                                }else{
                                     $("#" + chloeEachSalvo).addClass("green");
-                                    $('#' + chloeEachSalvo).text("they miss");
+                                    $('#' + chloeEachSalvo).text("X");
                                }
                       }
                  }
@@ -277,19 +279,21 @@ $(document).ready(function(){
     //FUNCTION TO ADD THE GAMEPLAYER INFO
     function addGamePlayerInfo(x, gpData) {
 
-          var gameInfoDiv = $("#whoIsPlayingNViewing");
+          var gameInfoDivOne = $("#whoIsPlayingNViewingOne");
+          var gameInfoDivTwo = $("#whoIsPlayingNViewingTwo");
+
           var gpData = gpData.gamePlayers;
 
-          var playerBoxOne = $("<h3 class='playerBox'></h3>");
-          var playerBoxTwo = $("<h3 class='playerBox'></h3>");
-
-        //console.log(gpData.length)
+          var playerBoxOne = $("<h3 class='playerBox blackFont'></h3>");
+          var playerBoxTwo = $("<h3 class='playerBox blackFont'></h3>");
 
         if(gpData.length == 1){
 
             var playerNameOne = gpData[0].player;
             playerBoxOne.append(playerNameOne);
-            gameInfoDiv.append(playerBoxOne);
+            gameInfoDivOne.append(playerBoxOne);
+            playerBoxTwo.append("???");
+            gameInfoDivTwo.append(playerBoxTwo);
 
         }else{
 
@@ -298,12 +302,22 @@ $(document).ready(function(){
                   var playerNameTwo = gpData[1].player;
                   playerBoxTwo.append(playerNameTwo);
 
-                  gameInfoDiv.append(playerBoxOne);
-                  gameInfoDiv.append(playerBoxTwo);
+                  gameInfoDivOne.append(playerBoxOne);
+                  gameInfoDivTwo.append(playerBoxTwo);
         }
       };
 
     function placeFirstRoundOfSalvoes(gpId, theData) {
+
+    //ADD PLACE FIRST ROUND TITLE
+    console.log(theData);
+    if((theData.gamePlayers.length == 1 && theData.ships.length == 5) || (theData.salvoes["0"].length == 0 || theData.salvoes["0"].length == 0)){
+        $("#playerInfoDiv").empty();
+        $("#gameStatusBox").html("<h2 class='center'>FIRE YOUR FIRST ROUND OF SALVOES IN THE GRID BELOW!</h2>");
+    }
+
+
+
 
     //THIS IF GRABS THE OPPOSITION GAMEPLAYER'S GP ID
     if(theData.gamePlayers.length == 2){
@@ -328,8 +342,22 @@ console.log(oppositionGP);
                     $("#gameStatusBox").html("<h2 class='center'>PLEASE WAIT FOR OPPONENT TO FIRE THEIR FIRST ROUND OF SALVOES</h2>");
 
                     $(".salvotiles").off('click');
-                    getSalvoData(gpId);
 
+             setInterval(function() {
+
+                    $.getJSON("http://localhost:8080/api/game_view/" + gpId, function(bigData) {
+                    //console.log(bigData);
+
+                        if (bigData.salvoes["0"].length == 1 && bigData.salvoes["1"].length == 1) {
+                            console.log("refresh");
+                            location.reload();
+                            console.log("refresh2");
+
+                        }
+                    });
+            }, 5000);
+
+                    getSalvoData(gpId);
                     //NEED TO ADD A REFRESH HERE!!!!!!!!!!!!!!!!!!!!!!
                     return;
                     }
@@ -485,7 +513,7 @@ console.log(oppositionGP);
              setInterval(function() {
 
                     $.getJSON("http://localhost:8080/api/game_view/" + loggedInGP, function(bigData) {
-                    console.log(bigData);
+                    //console.log(bigData);
 
                         if (bigData.salvoes.length == 2) {
                             console.log("refresh");
@@ -564,10 +592,11 @@ console.log(oppositionGP);
              for(var i = 0; i < oppositionPlayerSalvoes.length;i++){
                    for(var x = 0; x < oppositionPlayerSalvoes[i].locations.length; x++){
 
+
                         var chloeEachSalvo = oppositionPlayerSalvoes[i].locations[x];
                         chloeEachSalvo = chloeEachSalvo.slice(2);
 
-                        if($("#" + chloeEachSalvo).hasClass("blue")){
+                        if($("#" + chloeEachSalvo).hasClass("firePic")){
                            hitsOnYouArray.push(chloeEachSalvo);
                         }
                    }
@@ -587,18 +616,6 @@ console.log(oppositionGP);
 
             var wld = "1";
 
-/*            $.ajax({
-                    url: "api/games/players/" + gpId + "/winLoseDraw",
-                    type: "POST",
-                    contentType:"application/json",
-                    data: wld,
-                    success: function(){
-                    //alert("SUCCESS!");
-                    },
-                    error: function(){
-                        alert("ERROR");
-                    }
-                });*/
             $.ajax({
                     url: "/api/scores/" + gpId + "/" + "gameScore",
                     type: "POST",
@@ -608,7 +625,7 @@ console.log(oppositionGP);
                     //alert("SUCCESS!");
                     },
                     error: function(){
-                        alert("ERROR");
+                        //alert("ERROR");
                     }
                 });
         }
@@ -620,18 +637,6 @@ console.log(oppositionGP);
 
             var wld = "0.5";
 
-/*            $.ajax({
-                    url: "api/games/players/" + gpId + "/winLoseDraw",
-                    type: "POST",
-                    contentType:"application/json",
-                    data: wld,
-                    success: function(){
-                        //alert("SUCCESS!");
-                    },
-                    error: function(){
-                        alert("ERROR");
-                    }
-                });*/
             $.ajax({
                     url: "/api/scores/" + gpId + "/" + "gameScore",
                     type: "POST",
@@ -641,14 +646,18 @@ console.log(oppositionGP);
                     //alert("SUCCESS!");
                     },
                     error: function(){
-                        alert("ERROR");
+                        //alert("ERROR");
                     }
                 });
 
+            $("*").off();
         }
+console.log("losetest");
+console.log(hitsOnYouArray.length);
 
         //CHECK TO SEE IF THEY HAVE LOST!!
         if((loggedInPlayerSalvoes.length == oppositionPlayerSalvoes.length) && (hitsOnYouArray.length == 17) && (salvoData.hitsOnYourOpponent.length < 17)){
+
 
             $("#gameStatusBox").html("<h1 class='center animated bounceInLeft' id='loseId'>YOU LOSE!</h1>");
             $("#audioBox").html("<audio id='my_audio' src='../Styles/Nelson.mp3'></audio>");
@@ -665,9 +674,11 @@ console.log(oppositionGP);
                         //alert("SUCCESS!");
                     },
                     error: function(){
-                        alert("ERROR");
+                        //alert("ERROR");
                     }
                 });
+            $("*").off();
+
         }
 
         //THIS IF MEANS YOU HAVE HIT ALL THEIR BATTLESHIPS BUT TURN NUMBERS ARENT EQUAL
@@ -677,8 +688,3 @@ console.log(oppositionGP);
             $("#gameStatusBox").html("<h1 class='center'>YOU SUNK THEIR BATTLESHIPS!</h1><br><h2 class='center'>PLEASE WAIT FOR OPPONENT TO FIRE THEIR LAST ROUND</h2><br><h2 class='center'>WILL YOU WIN OR DRAW??</h2>");
         }
     };
-
-
-
-
-

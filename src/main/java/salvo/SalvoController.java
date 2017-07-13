@@ -289,17 +289,28 @@ public class SalvoController {
             return new ResponseEntity<>(makeMap("error", "YOU MUST BE SIGNED IN TO SET THE SCORES") , HttpStatus.UNAUTHORIZED);
         }
 
-        else{
+        Player theloggedinplayer = playerRepo.findByUserName(authentication.getName());
 
-            Player theloggedinplayer = playerRepo.findByUserName(authentication.getName());
+        GamePlayer currentGp = gamePlayerRepo.findOne(gpid);
 
-            GamePlayer currentGp = gamePlayerRepo.findOne(gpid);
+        //if gp already has a score, fuck off!
 
+/*
+        if(currentGp.getScore() != null){
+
+            return new ResponseEntity<>(makeMap("error", "YOU HAVE ALREADY HAD YOUR SCORE SAVED!") , HttpStatus.UNAUTHORIZED);
+
+        }
+*/
+
+
+
+            //SAVE THE SCORE
             Score scoreOne = new Score(currentGp, xxx);
             scoreRepo.save(scoreOne);
 
             return new ResponseEntity<>(makeMap("Your score has been", "saved!"), HttpStatus.ACCEPTED);
-        }
+
     }
 
 

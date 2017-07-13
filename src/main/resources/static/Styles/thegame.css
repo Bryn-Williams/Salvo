@@ -19,11 +19,14 @@ html {
 h1, h2 {
     color: white;
     font-family: "Bookman Old Style";
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 h1 {
-font-size: 50px;
-margin-bottom: 0px;
+    font-size: 60px;
+    margin-top: 20px;
+    margin-bottom: 10px;
     color: darkgoldenrod;
 
 }
@@ -63,7 +66,7 @@ tr:hover {
 }
 
 tr{
-    height: 40px;
+    height: 30px;
 }
 
 
@@ -107,7 +110,7 @@ form {
 #logOutBut {
 
     background-color: darkgoldenrod;
-    height: 40px;
+    height: 35px;
     margin-top: 100px;
     margin-bottom: 100px;
 }
@@ -145,15 +148,19 @@ body {
 
 .mainrow {
 
-    height: 40px;
+    height: 30px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
 }
 
 .tiles, .salvotiles {
-    width: 40px;
+    width: 30px;
     border: 1px solid red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
 }
 
 .centerColumn {
@@ -185,7 +192,7 @@ body {
     -webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;
-    width: 40px;
+    width: 30px;
 }
 
 .blue {
@@ -295,22 +302,55 @@ body {
     justify-content:center;
 }
 
-#whoIsPlayingNViewing {
+/*#whoIsPlayingNViewing {
     display: flex;
     justify-content: space-around;
+}*/
+
+#whoIsPlayingNViewingOne, #whoIsPlayingNViewingTwo, #versus {
+
+    background-color: rgba(255, 255, 255, 0.63);
+
 }
+
+#whoIsPlayingNViewingOne {
+
+    border-radius: 10px 0px 0px 10px;
+
+}
+
+#versus {
+
+
+}
+
+#whoIsPlayingNViewingTwo {
+
+    border-radius: 0px 10px 10px 0px;
+
+
+}
+
 
 #hitsTable{
     margin-top: 40px;
-
 }
 
 #divForGrid, #divForSalvoes, #divForHits, #gameListDiv {
+
 
     border-radius: 10px;
     padding: 15px;
     background-color: rgba(255, 255, 255, 0.63);
 
+}
+
+#divForHits{
+
+    width: 360px;
+    display: flex;
+        flex-direction: column;
+        align-items: center;
 }
 
 #divForShipInfo {
@@ -358,8 +398,8 @@ li {
 
 iframe{
 
-height: 40px;
-width: 40px;
+height: 28px;
+width: 28px;
 }
 
 /*#itsADraw{
@@ -383,3 +423,42 @@ color: darkgoldenrod;
     }
 }*/
 
+.right{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 200px;
+    padding-right:20px;
+}
+
+.left{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+        min-width: 200px;
+        padding-left:20px;
+}
+
+.centermid {
+    display: flex;
+    justify-content: center;
+    height: 40px;
+}
+h3{
+    margin: 0px 0px 0px 0px;
+}
+
+.firePic{
+
+    background-image: url(http://www.animatedimages.org/data/media/90/animated-fire-image-0404.gif);
+    background-size: 28px 28px;
+}
+
+#placeYourShip{
+
+    margin-bottom: 20px;
+}
+
+#gameStatusBox{
+    margin-bottom: 20px;
+}

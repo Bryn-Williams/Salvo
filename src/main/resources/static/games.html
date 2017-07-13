@@ -16,7 +16,11 @@
         <input id="logOutBut" type="button" value="LOG OUT" onclick="logOutFunction()">
     </div>
 
-    <div id="whoIsPlayingNViewing"></div>
+    <div id="playerInfoDiv" class="centermid">
+        <div id="whoIsPlayingNViewingOne" class="right"></div>
+        <div id="versus" class="center"><h3 class="blackFont">VS</h3></div>
+        <div id="whoIsPlayingNViewingTwo" class="left"></div>
+    </div>
     <div id="audioBox"></div>
     <div id="gameStatusBox"></div>
     <div id="bothGrids">
@@ -25,11 +29,6 @@
         <div id="divForHits">
             <div class='flex'><h2 class='blackFont'>Hits On Opponent!</h2></div>
             <table id="hitsTable">
-                <!--<thead>
-                    <tr>
-                       <th colspan="2">Hits On Opponent</th>
-                    </tr>
-                </thead>-->
                 <tbody>
                     <tr>
                         <td>Carrier</td>
