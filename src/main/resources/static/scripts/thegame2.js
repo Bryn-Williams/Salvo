@@ -6,10 +6,21 @@ $(document).ready(function () {
 
         createListOfGames(scoreboardData);
 
+        checkLogInTwo(scoreboardData);
   });
 });
 
 //END OF DOCUMENT READY END OF DOCUMENT READY END OF DOCUMENT READY END OF DOCUMENT READY END OF DOCUMENT READY
+
+    function checkLogInTwo(data){
+
+        if(data.currentPlayer){
+
+           $("#theLoggedInUserSpace").html(data.currentPlayer.name + " is logged in");
+           $("#hideMe").hide();
+
+        }
+    };
 
     function checkIfLogIn(){
 
@@ -101,8 +112,9 @@ $(document).ready(function () {
         $.post("/api/logout").done(function() {
 
             alert("log out successful!");
+                  window.open("http://localhost:8080/thegame.html", "_self");
 
-            checkIfLogIn();
+            //checkIfLogIn();
 
         })
     }

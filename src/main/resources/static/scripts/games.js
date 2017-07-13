@@ -412,7 +412,7 @@ console.log(oppositionGP);
                                     data: JSON.stringify(sendTheSalvoes),
                                     success: function(){
 
-                                        alert("I think your salvoes have been saved");
+                                        //alert("I think your salvoes have been saved");
                                         location.reload();
                                     },
                                     error: function(){
