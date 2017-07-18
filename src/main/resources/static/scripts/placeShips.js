@@ -4,7 +4,6 @@ $(document).ready(function () {
 
 });
 
-
 function createTheGrid() {
 
     var theDiv = $("#divForGrid"); //GETTING THE DIV

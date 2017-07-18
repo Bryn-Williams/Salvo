@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-  $.getJSON("http:/salty-citadel-95879.herokuapp.com/api/games", function(scoreboardData){
+  $.getJSON("api/games", function(scoreboardData){
 
         createScoreBoard(scoreboardData);
 
@@ -37,7 +37,7 @@ $(document).ready(function () {
 
             if(data.currentPlayer == null){
 
-                  window.open("http://salty-citadel-95879.herokuapp.com/thegame.html", "_self");
+                  window.open("https://salty-citadel-95879.herokuapp.com/thegame.html", "_self");
                   return;
             }
          })
@@ -75,7 +75,7 @@ $(document).ready(function () {
             theMainTable.append(tableRow);
         }
 
-        if(window.location.href == "http://salty-citadel-95879.herokuapp.com/thegame.html"){
+        if(window.location.href == "https://salty-citadel-95879.herokuapp.com/thegame.html"){
 
         $("#scoreBoard").append(theMainTable);
 
@@ -112,7 +112,7 @@ $(document).ready(function () {
         $.post("/api/logout").done(function() {
 
             alert("log out successful!");
-                  window.open("http://salty-citadel-95879.herokuapp.com/thegame.html", "_self");
+                  window.open("https://salty-citadel-95879.herokuapp.com/thegame.html", "_self");
 
             //checkIfLogIn();
 
@@ -200,7 +200,7 @@ $(document).ready(function () {
 
                 if(theCurrentPlayerName == theEmail){
 
-                     window.open("http://salty-citadel-95879.herokuapp.com/games.html?gp=" + theGamePlayerID + "","_self");
+                     window.open("https://salty-citadel-95879.herokuapp.com/games.html?gp=" + theGamePlayerID + "","_self");
 
                 } else{
 
@@ -224,7 +224,7 @@ $(document).ready(function () {
                 })
 
             //OPENS PLACE SHIPS PAGE!
-            window.open("http://salty-citadel-95879.herokuapp.com/placeShipsPage.html","_self");
+            window.open("https://salty-citadel-95879.herokuapp.com/placeShipsPage.html","_self");
 
             }else{
                 alert("you must log in to create a game");
@@ -244,7 +244,7 @@ $(document).ready(function () {
                 //var theGamePlayerID = data.newGpID;
 
                 //window.open("http://salty-citadel-95879.herokuapp.com/games.html?gp=" + theGamePlayerID + "","_self");
-                window.open("http://salty-citadel-95879.herokuapp.com/placeShipsPage.html","_self");
+                window.open("https://salty-citadel-95879.herokuapp.com/placeShipsPage.html","_self");
 
             },
             error: function(){
@@ -558,7 +558,7 @@ $(document).ready(function () {
                     success: function(){
 
                         alert("SUCCESS!");
-                        window.open("http://salty-citadel-95879.herokuapp.com/games.html?gp=" + gamePlayerId ,"_self");
+                        window.open("https://salty-citadel-95879.herokuapp.com/games.html?gp=" + gamePlayerId ,"_self");
                     },
                     error: function(){
                         alert("ERROR");

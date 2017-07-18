@@ -3,7 +3,7 @@ $(document).ready(function(){
   var x = getURL();
 
 
-  $.getJSON("http://salty-citadel-95879.herokuapp.com/api/game_view/" + x, function (bigData) {
+  $.getJSON("api/game_view/" + x, function (bigData) {
         //CALL THE FUNCTIONS HERE
         var theData = bigData;
 
@@ -171,7 +171,7 @@ $(document).ready(function(){
     //GET LIST OF SALVO LOCATIONS
     function getSalvoData(x) {
 
-            $.getJSON("http://salty-citadel-95879.herokuapp.com/api/game_view/" + x, function (bigData){
+            $.getJSON("api/game_view/" + x, function (bigData){
 
             var salvoData = bigData;
             var hitsOnYourOpponent = salvoData.hitsOnYourOpponent;
@@ -345,7 +345,7 @@ console.log(oppositionGP);
 
              setInterval(function() {
 
-                    $.getJSON("http://salty-citadel-95879.herokuapp.com/api/game_view/" + gpId, function(bigData) {
+                    $.getJSON("api/game_view/" + gpId, function(bigData) {
                     //console.log(bigData);
 
                         if (bigData.salvoes["0"].length == 1 && bigData.salvoes["1"].length == 1) {
@@ -512,7 +512,7 @@ console.log(oppositionGP);
              //THIS WILL REFRESH THE PAGE WHEN AN EXTRA PLAYER JOINS
              setInterval(function() {
 
-                    $.getJSON("http://salty-citadel-95879.herokuapp.com/api/game_view/" + loggedInGP, function(bigData) {
+                    $.getJSON("api/game_view/" + loggedInGP, function(bigData) {
                     //console.log(bigData);
 
                         if (bigData.salvoes.length == 2) {
@@ -544,7 +544,7 @@ console.log(oppositionGP);
                         $("#gameStatusBox").html("<h2 class='center'>WAIT FOR OPPONENT TO FIRE!</h2>");
 
                          setInterval(function() {
-                                $.getJSON("http://salty-citadel-95879.herokuapp.com/api/game_view/" + loggedInGP, function(bigData) {
+                                $.getJSON("api/game_view/" + loggedInGP, function(bigData) {
 
                                     //possibly change the if below...if(loggedInGp's salvoes != opposition player salvoes)
                                     if (bigData.salvoes["0"].length != bigData.salvoes["1"].length) {
@@ -568,7 +568,7 @@ console.log(oppositionGP);
                         $(".salvotiles").off('click');
                         $("#gameStatusBox").html("<h2 class='center'>WAIT FOR OPPONENT TO FIRE!</h2>");
                          setInterval(function() {
-                                $.getJSON("http://salty-citadel-95879.herokuapp.com/api/game_view/" + loggedInGP, function(bigData) {
+                                $.getJSON("api/game_view/" + loggedInGP, function(bigData) {
 
                                     //possibly change the if below...if(loggedInGp's salvoes != opposition player salvoes)
                                     if (bigData.salvoes["0"].length == bigData.salvoes["1"].length) {
