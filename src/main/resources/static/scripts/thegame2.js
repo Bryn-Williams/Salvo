@@ -113,9 +113,6 @@ $(document).ready(function () {
 
             alert("log out successful!");
                   window.open("http://localhost:8080/thegame.html", "_self");
-
-            //checkIfLogIn();
-
         })
     }
 

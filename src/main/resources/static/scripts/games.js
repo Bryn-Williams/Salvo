@@ -608,6 +608,8 @@ console.log(oppositionGP);
         if((loggedInPlayerSalvoes.length == oppositionPlayerSalvoes.length) && (salvoData.hitsOnYourOpponent.length == 17) && hitsOnYouArray.length != 17){
             //YOU WIN!!!!!!!!!!!!!!
             $("#gameStatusBox").empty();
+            $("#header").empty();
+            $("#playerInfoDiv").remove();
             $("#gameStatusBox").html("<h1 class='center bounceInLeft'>YOU SUNK THEIR BATTLESHIPS!</h1><br><h1 class='center animated bounceInLeft'>YOU WIN!!!!</h1>");
             $("#audioBox").html("<audio id='my_audio' src='../Styles/sunkBattleship.mp3'></audio>");
             $("#my_audio").get(0).play();
@@ -658,10 +660,13 @@ console.log(hitsOnYouArray.length);
         //CHECK TO SEE IF THEY HAVE LOST!!
         if((loggedInPlayerSalvoes.length == oppositionPlayerSalvoes.length) && (hitsOnYouArray.length == 17) && (salvoData.hitsOnYourOpponent.length < 17)){
 
-
+            $("#header").empty();
             $("#gameStatusBox").html("<h1 class='center animated bounceInLeft' id='loseId'>YOU LOSE!</h1>");
             $("#audioBox").html("<audio id='my_audio' src='../Styles/Nelson.mp3'></audio>");
             $("#my_audio").get(0).play();
+
+           // $("#footerBar").empty();
+
             //SEND LOSE TO BACKEND
             var wld = "lose";
 

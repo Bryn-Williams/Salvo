@@ -34,7 +34,7 @@ h1 {
 table {
     border: 1px solid black;
     border-radius: 10px;
-    padding: 20px;
+    padding: 8px;
 /*
     background-color: rgba(255, 255, 255, 0.63);
 */
@@ -111,8 +111,6 @@ form {
 
     background-color: darkgoldenrod;
     height: 35px;
-    margin-top: 100px;
-    margin-bottom: 100px;
 }
 
 #scoreBoard {
@@ -333,7 +331,7 @@ body {
 
 
 #hitsTable{
-    margin-top: 40px;
+    margin-top: 20px;
 }
 
 #divForGrid, #divForSalvoes, #divForHits, #gameListDiv {
