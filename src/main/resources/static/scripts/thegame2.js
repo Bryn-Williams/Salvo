@@ -37,7 +37,7 @@ $(document).ready(function () {
 
             if(data.currentPlayer == null){
 
-                  window.open("https://salty-citadel-95879.herokuapp.com/thegame.html", "_self");
+                  window.open("http://localhost:8080/thegame.html", "_self");
                   return;
             }
          })
@@ -75,7 +75,7 @@ $(document).ready(function () {
             theMainTable.append(tableRow);
         }
 
-        if(window.location.href == "https://salty-citadel-95879.herokuapp.com/thegame.html"){
+        if(window.location.href == "http://localhost:8080/thegame.html"){
 
         $("#scoreBoard").append(theMainTable);
 
@@ -112,7 +112,7 @@ $(document).ready(function () {
         $.post("/api/logout").done(function() {
 
             alert("log out successful!");
-                  window.open("https://salty-citadel-95879.herokuapp.com/thegame.html", "_self");
+                  window.open("http://localhost:8080/thegame.html", "_self");
 
             //checkIfLogIn();
 
@@ -200,7 +200,7 @@ $(document).ready(function () {
 
                 if(theCurrentPlayerName == theEmail){
 
-                     window.open("https://salty-citadel-95879.herokuapp.com/games.html?gp=" + theGamePlayerID + "","_self");
+                     window.open("http://localhost:8080/games.html?gp=" + theGamePlayerID + "","_self");
 
                 } else{
 
@@ -224,14 +224,13 @@ $(document).ready(function () {
                 })
 
             //OPENS PLACE SHIPS PAGE!
-            window.open("https://salty-citadel-95879.herokuapp.com/placeShipsPage.html","_self");
+            window.open("http://localhost:8080/placeShipsPage.html","_self");
 
             }else{
                 alert("you must log in to create a game");
             }
          })
     }
-
     function joinGame(gameId){
 
            $.ajax({
@@ -244,7 +243,7 @@ $(document).ready(function () {
                 //var theGamePlayerID = data.newGpID;
 
                 //window.open("http://salty-citadel-95879.herokuapp.com/games.html?gp=" + theGamePlayerID + "","_self");
-                window.open("https://salty-citadel-95879.herokuapp.com/placeShipsPage.html","_self");
+                window.open("http://localhost:8080/placeShipsPage.html","_self");
 
             },
             error: function(){
@@ -293,7 +292,7 @@ $(document).ready(function () {
                     var coordinateOfLastSquare = arrayOfShipPositions[indexOfLastArrayItem];
                     var theNumberOfCoordinateOfLastSquare = coordinateOfLastSquare.slice(1);
 
-                    if (theNumberOfCoordinateOfLastSquare == 11 || theNumberOfCoordinateOfLastSquare == 12 || theNumberOfCoordinateOfLastSquare == 13 || theNumberOfCoordinateOfLastSquare == 14 || theNumberOfCoordinateOfLastSquare == 15) {
+                    if (theNumberOfCoordinateOfLastSquare == 10 || theNumberOfCoordinateOfLastSquare == 11 || theNumberOfCoordinateOfLastSquare == 12 || theNumberOfCoordinateOfLastSquare == 13 || theNumberOfCoordinateOfLastSquare == 14) {
 
                         for (var b = 0; b < arrayOfShipPositions.length; b++) {
 
@@ -378,7 +377,7 @@ $(document).ready(function () {
                     var arrayOfShipPositions = [];
                     arrayOfShipPositions.push(theCurrentSquare);
 
-                    var alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+                    var alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
                     var indexOfCurrentLetter = alphabet.indexOf(theLetterOfCurrentSquare);
                     var colorOfSquare = $("#" + theCurrentSquare).css("background-color");
 
@@ -455,7 +454,7 @@ $(document).ready(function () {
                     var colorOfSquare = $("#" + theCurrentSquare).css("background-color");
 
 
-                    var alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+                    var alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
                     var indexOfCurrentLetter = alphabet.indexOf(theLetterOfCurrentSquare);
 
                     if (colorOfSquare == "rgb(255, 0, 0)") {
@@ -558,7 +557,7 @@ $(document).ready(function () {
                     success: function(){
 
                         alert("SUCCESS!");
-                        window.open("https://salty-citadel-95879.herokuapp.com/games.html?gp=" + gamePlayerId ,"_self");
+                        window.open("http://localhost:8080/games.html?gp=" + gamePlayerId ,"_self");
                     },
                     error: function(){
                         alert("ERROR");

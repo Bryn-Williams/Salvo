@@ -1,13 +1,13 @@
 $(document).ready(function () {
 
-    var theLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-    var theNumbers = [" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+    var theLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+    var theNumbers = [" ", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
     function createTheGrid() {
 
         var theDiv = $("#divForGrid"); //GETTING THE DIV
 
-        for (var i = 0; i < 11; i++) {
+        for (var i = 0; i < 10; i++) {
 
             var row = $("<div class='mainrow'></div>");
             var tiles = $("<div class='numbertiles'></div>");
@@ -17,7 +17,7 @@ $(document).ready(function () {
             tiles.append(spanny);
             row.append(tiles);
 
-            for (var x = 0; x < 10; x++) {
+            for (var x = 0; x < 9; x++) {
 
                 var tiles = $("<div class='tiles'></div>");
                 var lettertiles = $("<div class='lettertiles'></div>");
@@ -40,7 +40,7 @@ $(document).ready(function () {
 
         var theDiv = $("#divForSalvoes"); //GETTING THE DIV
 
-        for (var i = 0; i < 11; i++) {
+        for (var i = 0; i < 10; i++) {
 
             var row = $("<div class='mainrow'></div>");
             var tiles = $("<div class='numbertiles'></div>");
@@ -50,7 +50,7 @@ $(document).ready(function () {
             tiles.append(spanny);
             row.append(tiles);
 
-            for (var x = 0; x < 10; x++) {
+            for (var x = 0; x < 9; x++) {
 
                 var tiles = $("<div class='tiles'></div>");
                 var lettertiles = $("<div class='lettertiles'></div>");
@@ -100,7 +100,7 @@ $(document).ready(function () {
     //GET LIST OF SHIP LOCATIONS
     function getGPData(x) {
 
-        $.getJSON("http://salty-citadel-95879.herokuapp.com/api/game_view/" + x, function (gpData) {
+        $.getJSON("http://localhost:8080/api/game_view/" + x, function (gpData) {
             var shipLocation = gpData["ships: "];
 
             for (var i = 0; i < shipLocation.length; i++) {
@@ -121,7 +121,7 @@ $(document).ready(function () {
     //GET LIST OF SALVO LOCATIONS
     function getSalvoData(x) {
 
-        $.getJSON("http://salty-citadel-95879.herokuapp.com/api/game_view/" + x, function (salvoData) {
+        $.getJSON("http://localhost:8080/api/game_view/" + x, function (salvoData) {
             console.log(salvoData);
             if (salvoData["salvoes: "]["0"]["0"].gamePlayer == x) {
 

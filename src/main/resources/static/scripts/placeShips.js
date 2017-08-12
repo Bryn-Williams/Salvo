@@ -8,11 +8,11 @@ function createTheGrid() {
 
     var theDiv = $("#divForGrid"); //GETTING THE DIV
 
-    var theLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-    var theNumbers = [" ", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+    var theLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+    var theNumbers = [" ", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
 
-    for (var i = 0; i < 11; i++) {
+    for (var i = 0; i < 10; i++) {
 
         var row = $("<div class='mainrow'></div>");
         var tiles = $("<div class='numbertiles'></div>");
@@ -22,7 +22,7 @@ function createTheGrid() {
         tiles.append(spanny);
         row.append(tiles);
 
-        for (var x = 0; x < 10; x++) {
+        for (var x = 0; x < 9; x++) {
 
             var tiles = $("<div class='tiles'></div>");
             var lettertiles = $("<div class='lettertiles'></div>");
