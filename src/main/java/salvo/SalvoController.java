@@ -294,16 +294,11 @@ public class SalvoController {
         GamePlayer currentGp = gamePlayerRepo.findOne(gpid);
 
         //if gp already has a score, fuck off!
-
-/*
         if(currentGp.getScore() != null){
 
             return new ResponseEntity<>(makeMap("error", "YOU HAVE ALREADY HAD YOUR SCORE SAVED!") , HttpStatus.UNAUTHORIZED);
 
         }
-*/
-
-
 
             //SAVE THE SCORE
             Score scoreOne = new Score(currentGp, xxx);

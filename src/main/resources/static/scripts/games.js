@@ -614,8 +614,10 @@ console.log(oppositionGP);
             $("#audioBox").html("<audio id='my_audio' src='../Styles/sunkBattleship.mp3'></audio>");
             $("#my_audio").get(0).play();
             $("*").off();
-            //SEND WIN TO BACKEND
 
+            $("#footerBar").append("<input id=\"logOutBut\" type=\"button\" value=\"RETURN TO MAIN PAGE\" onclick=\"returnToMainPage()\">");
+
+            //SEND WIN TO BACKEND
             var wld = "1";
 
             $.ajax({
@@ -629,13 +631,14 @@ console.log(oppositionGP);
                     error: function(){
                         //alert("ERROR");
                     }
-                });
+            });
         }
 
         //CHECK TO SEE IF IT'S A DRAW
         if((loggedInPlayerSalvoes.length == oppositionPlayerSalvoes.length) && (salvoData.hitsOnYourOpponent.length == 17) && hitsOnYouArray.length == 17){
 
            $("#gameStatusBox").html("<h1 class='center animated bounceInLeft'>IT'S A DRAW</h1>");
+           $("#footerBar").append("<input id=\"logOutBut\" type=\"button\" value=\"RETURN TO MAIN PAGE\" onclick=\"returnToMainPage()\">");
 
             var wld = "0.5";
 
@@ -654,8 +657,6 @@ console.log(oppositionGP);
 
             $("*").off();
         }
-console.log("losetest");
-console.log(hitsOnYouArray.length);
 
         //CHECK TO SEE IF THEY HAVE LOST!!
         if((loggedInPlayerSalvoes.length == oppositionPlayerSalvoes.length) && (hitsOnYouArray.length == 17) && (salvoData.hitsOnYourOpponent.length < 17)){
@@ -665,7 +666,7 @@ console.log(hitsOnYouArray.length);
             $("#audioBox").html("<audio id='my_audio' src='../Styles/Nelson.mp3'></audio>");
             $("#my_audio").get(0).play();
 
-           // $("#footerBar").empty();
+            $("#footerBar").append("<input id=\"logOutBut\" type=\"button\" value=\"RETURN TO MAIN PAGE\" onclick=\"returnToMainPage()\">");
 
             //SEND LOSE TO BACKEND
             var wld = "lose";

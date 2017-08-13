@@ -116,6 +116,11 @@ $(document).ready(function () {
         })
     }
 
+    function returnToMainPage(){
+
+        window.open("http://localhost:8080/thegame.html", "_self");
+    }
+
     function signUpFunction() {
 
         var userNameValue = $("#userId").val();
