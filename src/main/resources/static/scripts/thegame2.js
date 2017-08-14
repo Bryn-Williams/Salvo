@@ -49,7 +49,7 @@ $(document).ready(function () {
         var theData = data.listOfPlayers;
 
         var theMainTable = $("<table/>");
-        var tableHead = $("<tr id=\"topRow\"><th>Name</th><th>Total Score</th><th>Won</th><th>Lost</th><th>Tied</th></tr>");
+        var tableHead = $("<tr id=\"topRow\"><th>Name</th><th>Total Score</th><th>Won</th><th>Tied</th></tr>");
 
         theMainTable.append(tableHead);
 
@@ -65,9 +65,9 @@ $(document).ready(function () {
 
             var c = theData[i].Wins;
             tableRow.append("<td>" + c + "</td>");
-
+/*
             var d = theData[i].Losses;
-            tableRow.append("<td>" + d + "</td>");
+            tableRow.append("<td>" + d + "</td>");*/
 
             var e = theData[i].Ties;
             tableRow.append("<td>" + e + "</td>");
