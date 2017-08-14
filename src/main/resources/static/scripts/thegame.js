@@ -100,7 +100,7 @@ $(document).ready(function () {
     //GET LIST OF SHIP LOCATIONS
     function getGPData(x) {
 
-        $.getJSON("http://localhost:8080/api/game_view/" + x, function (gpData) {
+        $.getJSON("https://salty-citadel-95879.herokuapp.com/api/game_view/" + x, function (gpData) {
             var shipLocation = gpData["ships: "];
 
             for (var i = 0; i < shipLocation.length; i++) {
@@ -121,7 +121,7 @@ $(document).ready(function () {
     //GET LIST OF SALVO LOCATIONS
     function getSalvoData(x) {
 
-        $.getJSON("http://localhost:8080/api/game_view/" + x, function (salvoData) {
+        $.getJSON("https://salty-citadel-95879.herokuapp.com/api/game_view/" + x, function (salvoData) {
             console.log(salvoData);
             if (salvoData["salvoes: "]["0"]["0"].gamePlayer == x) {
 
