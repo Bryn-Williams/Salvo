@@ -77,7 +77,7 @@ $(document).ready(function () {
 
         if(window.location.href == "https://salty-citadel-95879.herokuapp.com/thegame.html"){
 
-        $("#scoreBoard").append(theMainTable);
+            $("#scoreBoard").append(theMainTable);
 
         }
     }

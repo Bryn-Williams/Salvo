@@ -677,10 +677,10 @@ console.log(oppositionGP);
                     contentType:"application/json",
                     data: wld,
                     success: function(){
-                        //alert("SUCCESS!");
+                        alert("SUCCESS LOST SENT!");
                     },
                     error: function(){
-                        //alert("ERROR");
+                        alert("ERROR LOST NOT SENT");
                     }
                 });
             $("*").off();
