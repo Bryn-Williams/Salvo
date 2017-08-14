@@ -153,14 +153,9 @@ $(document).ready(function () {
 
            var theList = $("#theList");
            var theData = data.games;
-           //var theLoggedInPlayer = data.currentPlayer.name;
-           //console.log(theLoggedInPlayer);
-
             $.each(theData, function(key,value){
 
-                //var newListItem = $("<li>" + "Game no. " + value.gameId + "," + "</li>");
                 var newListItem = $("<li></li>");
-
 
                 $.each(value.gamePlayers, function(key2,value2){
 
@@ -173,7 +168,7 @@ $(document).ready(function () {
                         newListItem.append('<button onclick="takeMeToMyGame(\'' + value2.id + '\',\'' + theEmail + '\')">GO TO GAME</button>');
                     }
                     if(value.gamePlayers.length == 1){
-                       var theEmail = value2.player.email;
+                        var theEmail = value2.player.email;
 
                         newListItem.append(" " + theEmail + " ");
                         newListItem.append('<button onclick="takeMeToMyGame(\'' + value2.id + '\',\'' + theEmail + '\')">GO TO GAME</button>');
@@ -233,6 +228,7 @@ $(document).ready(function () {
             }
          })
     }
+
     function joinGame(gameId){
 
            $.ajax({
@@ -242,14 +238,11 @@ $(document).ready(function () {
             success: function(data){
 
                 alert("SUCCESS!");
-                //var theGamePlayerID = data.newGpID;
-
-                //window.open("http://salty-citadel-95879.herokuapp.com/games.html?gp=" + theGamePlayerID + "","_self");
                 window.open("http://localhost:8080/placeShipsPage.html","_self");
 
             },
             error: function(){
-                alert("YOU MUST SIGN IN TO JOIN A GAME");
+                alert("YOUR OPPONENT IS STILL PLACING THEIR SHIPS, PLEASE TRY AGAIN IN ONE MOMENT");
             }
         });
     }

@@ -310,10 +310,6 @@ public class SalvoController {
 
 
 
-
-
-
-
     //METHOD TO JOIN GAME
     @RequestMapping(path = "/games/{xx}/players", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> joinGame(@PathVariable Long xx, Authentication authentication) {
@@ -321,6 +317,17 @@ public class SalvoController {
         Game currentGame = gameRepo.findOne(xx);
 
         Player theloggedinplayer = playerRepo.findByUserName(authentication.getName());
+
+        //start of testing
+
+        Set<GamePlayer> theOneGP = currentGame.getGamePlayers();
+        GamePlayer theOtherGp = theOneGP.stream().findFirst().get();
+
+        if(theOtherGp.getMysalvoes().isEmpty()){
+            return new ResponseEntity<>(makeMap("error", "other player hasnt placed salvoes"), HttpStatus.UNAUTHORIZED);
+        }
+//end of testingggggggggggggggggggggggg
+
 
         //IF NOBODY HAS SIGNED IN,
         if (authentication == null) {
