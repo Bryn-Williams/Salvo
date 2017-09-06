@@ -56,8 +56,6 @@ public class SalvoController {
 
             Player thisPlayerId = playerRepo.findByUserName(authentication.getName());
 
-            //Player theMoFRO = thisPlayerId.get(0);
-
             dtoxx.put("id", thisPlayerId.getId());
             dtoxx.put("name", thisPlayerId.getUserName());
 
@@ -161,7 +159,6 @@ public class SalvoController {
 
             return new ResponseEntity<Map<String, Object>>(makeMap("error", "YOU CANT SEE THIS"), HttpStatus.UNAUTHORIZED);
         }
-
     }
 
     private Map<String, Object> makeMap(String key, Object value) {

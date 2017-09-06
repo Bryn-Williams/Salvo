@@ -143,8 +143,6 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 				Player theloggedinplayer = playerRepository.findByUserName(userName);
                 if (theloggedinplayer != null) {
 
-                    //Player player = players.get(0);
-
                     return new User(theloggedinplayer.getUserName(), theloggedinplayer.getPassword(),
                             AuthorityUtils.createAuthorityList("USER"));
 
